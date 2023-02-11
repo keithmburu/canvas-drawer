@@ -1,4 +1,9 @@
-// Copyright 2021, Aline Normoyle, alinen
+/*-----------------------------------------------
+ * Author:
+ * Date:
+ * Description:
+ ----------------------------------------------*/
+
 
 #ifndef AGL_IMAGE_H_
 #define AGL_IMAGE_H_

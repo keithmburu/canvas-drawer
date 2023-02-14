@@ -19,6 +19,13 @@ int main(int argc, char** argv)
    Canvas drawer(100, 100);
 
    drawer.color(255, 255, 255);
+
+   // test point primitive
+   drawer.begin(POINTS);
+   drawer.vertex(50, 50);
+   drawer.end();
+   drawer.save("point.png");
+
    test_line(drawer, 0, 50, 100, 50, "horizontal-line.png");
    test_line(drawer, 50, 0, 50, 100, "vertical-line.png");
    test_line(drawer, 0, 0, 100, 100, "diagonal-line-1.png"); // slope = 1
@@ -38,32 +45,51 @@ int main(int argc, char** argv)
    drawer.end();
    drawer.save("line-color-interpolation.png");
 
-   // test triangle with interpolation
-   drawer.background(0, 0, 0);
-   drawer.begin(TRIANGLES);
-   drawer.color(255, 0, 255);
-   drawer.vertex(10, 0);
-   drawer.color(0, 255, 255);
-   drawer.vertex(90, 50);
-   drawer.color(255, 255, 0);
-   drawer.vertex(10, 90);
-   drawer.end();
-   drawer.save("triangle.png");
+   // // test triangle with interpolation
+   // drawer.background(0, 0, 0);
+   // drawer.begin(TRIANGLES);
+   // drawer.color(255, 0, 255);
+   // drawer.vertex(10, 0);
+   // drawer.color(0, 255, 255);
+   // drawer.vertex(90, 50);
+   // drawer.color(255, 255, 0);
+   // drawer.vertex(10, 90);
+   // drawer.end();
+   // drawer.save("triangle.png");
 
-   // test triangle with interpolation
-   drawer.background(0, 0, 0);
-   drawer.begin(TRIANGLES);
-   drawer.color(255, 0, 255);
-   drawer.vertex(10, 10);
-   drawer.vertex(10, 90);
-   drawer.vertex(90, 90);
+   // // test triangle with interpolation
+   // drawer.background(0, 0, 0);
+   // drawer.begin(TRIANGLES);
+   // drawer.color(255, 0, 255);
+   // drawer.vertex(10, 10);
+   // drawer.vertex(10, 90);
+   // drawer.vertex(90, 90);
 
-   drawer.color(255, 255, 0);
-   drawer.vertex(90, 90);
-   drawer.vertex(90, 10);
-   drawer.vertex(10, 10);
+   // drawer.color(255, 255, 0);
+   // drawer.vertex(90, 90);
+   // drawer.vertex(90, 10);
+   // drawer.vertex(10, 10);
+   // drawer.end();
+   // drawer.save("quad.png");
+
+   // // test more than one line
+   // drawer.color(255, 255, 255);
+   // drawer.begin(LINES);
+   // drawer.vertex(0, 0);
+   // drawer.vertex(99, 99);
+   // drawer.vertex(0, 99);
+   // drawer.vertex(99, 0);
+   // drawer.end();
+   // drawer.save("two-lines.png");
+
+   // test gradient
+   drawer.gradient({255, 0, 0}, {0, 0, 255}, "vertical");
+   drawer.color(255, 255, 255);
+   drawer.begin(LINES);
+   drawer.vertex(0, 0);
+   drawer.vertex(99, 99);
    drawer.end();
-   drawer.save("quad.png");
+   drawer.save("vertical-gradient.png");
 
    return 0;
 }

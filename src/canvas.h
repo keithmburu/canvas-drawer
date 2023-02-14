@@ -1,8 +1,9 @@
-/*-----------------------------------------------
- * Author:
- * Date:
- * Description:
- ----------------------------------------------*/
+/**
+ * @file canvas.h
+ * @author Keith Mburu
+ * @date 2023-02-13
+ * 
+ */
 
 #ifndef canvas_H_
 #define canvas_H_
@@ -13,7 +14,13 @@
 
 namespace agl
 {
-   enum PrimitiveType {UNDEFINED, LINES, TRIANGLES};
+   enum PrimitiveType {UNDEFINED, POINTS, LINES, TRIANGLES};
+   struct Vertex {
+      int x;
+      int y;
+      Pixel color;
+   };
+
    class Canvas
    {
    public:
@@ -46,8 +53,21 @@ namespace agl
       // Fill the canvas with the given background color
       void background(unsigned char r, unsigned char g, unsigned char b);
 
+      void drawPoint();
+
+      void drawLine();
+
+      void drawTriangle();
+
+      void paint(int idx, const Pixel& color, const std::string& blendMode);
+
+      void gradient(const Pixel& a, const Pixel& b, const std::string& orientation);
+
    private:
       Image _canvas;
+      PrimitiveType _currentType;
+      Pixel _currentColor;
+      std::vector<Vertex> _vertices;
    };
 }
 

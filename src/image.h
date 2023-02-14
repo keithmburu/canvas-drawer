@@ -1,21 +1,23 @@
-/*-----------------------------------------------
- * Author:
- * Date:
- * Description:
- ----------------------------------------------*/
-
+/**
+ * Class that loads images, performs various operations on them, and 
+ * saves them
+ * 
+ * @file image.h
+ * @author Keith Mburu
+ * @version 2023-02-09
+ */
 
 #ifndef AGL_IMAGE_H_
 #define AGL_IMAGE_H_
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 namespace agl {
 
 /**
  * @brief Holder for a RGB color
- * 
  */
 struct Pixel {
     unsigned char r;
@@ -32,6 +34,7 @@ class Image {
   Image(int width, int height);
   Image(const Image& orig);
   Image& operator=(const Image& orig);
+  friend std::ostream& operator<<(std::ostream& os, const Image& image);
 
   virtual ~Image();
 
@@ -49,7 +52,7 @@ class Image {
    * @param filename The file to load, relative to the running directory
    * @param flip Whether the file should flipped vertally before being saved
    */
-  bool save(const std::string& filename, bool flip = true) const;
+  bool save(const std::string& filename, bool flip = false) const;
 
   /** @brief Return the image width in pixels
    */
@@ -64,7 +67,7 @@ class Image {
    *
    * Data will have size width * height * 4 (RGB)
    */
-  char* data() const;
+  unsigned char* data() const;
 
   /**
    * @brief Replace image RGB data
@@ -178,23 +181,67 @@ class Image {
   // Assumes that the two images are the same size
   Image alphaBlend(const Image& other, float amount) const;
 
-  // Convert the image to grayscale
+  // Replace each pixel value "x" with 255-x
   Image invert() const;
 
   // Convert the image to grayscale
   Image grayscale() const;
 
-  // return a bitmap version of this image
-  Image colorJitter(int size) const;
+  // Randomly tweak pixel values with tweak value < maxSize
+  Image colorJitter(int maxSize) const;
 
   // return a bitmap version of this image
   Image bitmap(int size) const;
 
-  // Fill this image with a color
-  void fill(const Pixel& c);
+  // Fill pixels of certain color with another color
+  Image fill(const Pixel& a, const Pixel& b);
+
+  // Apply simple box blur to image 
+  Image blur(int iters = 1) const;
+
+  // Apply gaussian blur to image 
+  Image blurGaussian() const;
+
+  // Apply glowing texture to image
+  Image glow() const;
+
+  // Color the pixels at the edges of image
+  Image border(const Pixel& c) const;
+
+  // Accentuate edges in image
+  Image sobel() const;
+
+  // Generate corrupted version of image
+  Image glitch() const;
+
+  // Make image look more like a painting 
+  Image painterly() const;
+
+  // Displace pixels based on sine and cosine
+  Image distort(const std::string& orientation) const;
+
+  // Apply color gradient
+  Image gradient(const Pixel& px1, const Pixel& px2, const std::string& orientation) const;
+
+  // Emphasize edges in image using unsharp mask filtering
+  Image sharpen() const;
+
+  // Increase all pixel values by fixed percentage
+  Image brighten(int percentage) const;
+
+  // Decrease all pixel values by fixed percentage
+  Image dim(int percentage) const;
+
+  // Apply excessive saturation, sharpening, and grainy texture
+  Image deepFry() const;
 
  private:
-   // todo
+   // char array for storing pixel data
+   unsigned char* _data;
+   // number of pixels in the image's x dimension
+   int _width;
+   // number of pixels in the image's y dimension
+   int _height;
 };
 }  // namespace agl
 #endif  // AGL_IMAGE_H_

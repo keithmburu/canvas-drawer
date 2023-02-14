@@ -57,9 +57,13 @@ namespace agl
 
       void drawLine();
 
+      void drawLineLow(Vertex& beginVertex, Vertex& endVertex);
+
+      void drawLineHigh(Vertex& beginVertex, Vertex& endVertex);
+
       void drawTriangle();
 
-      void paint(int idx, const Pixel& color, const std::string& blendMode);
+      void colorPixel(int idx, const Pixel& color, const std::string& blendMode);
 
       void gradient(const Pixel& a, const Pixel& b, const std::string& orientation);
 

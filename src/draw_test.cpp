@@ -83,6 +83,7 @@ int main(int argc, char** argv)
    // drawer.save("two-lines.png");
 
    // test gradient
+   drawer.background(255, 255, 255);
    drawer.gradient({255, 0, 0}, {0, 0, 255}, "vertical");
    drawer.color(255, 255, 255);
    drawer.begin(LINES);

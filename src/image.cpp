@@ -668,21 +668,24 @@ Image Image::gradient(const Pixel& px1, const Pixel& px2, const std::string& ori
       exit(1);
    }
    float progress;
+   unsigned char r, g, b;
    for (int i = 0; i < this->_height; i++) {
       if (orientation == "vertical") {
          progress = (float) i / this->_height;
       }
+      std::cout << progress << std::endl;
       for (int j = 0; j < this->_width; j++) {
          if (orientation == "horizontal") {
             progress = (float) j / this->_width;
          }
-         unsigned char r = (unsigned char) (px1.r * progress + px2.r * (1 - progress));
-         unsigned char g = (unsigned char) (px1.g * progress + px2.g * (1 - progress));
-         unsigned char b = (unsigned char) (px1.b * progress + px2.b * (1 - progress));
+         r = (unsigned char) (px1.r * progress + px2.r * (1 - progress));
+         g = (unsigned char) (px1.g * progress + px2.g * (1 - progress));
+         b = (unsigned char) (px1.b * progress + px2.b * (1 - progress));
          filter.set(i, j, {r, g, b});
       }
+      std::cout << (int) r << " " << (int) g << " " << (int) b << std::endl;
    }
-   return this->alphaBlend(filter, 0.5);
+   return this->alphaBlend(filter, 0.8);
 }
 
 Image Image::sharpen() const {

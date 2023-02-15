@@ -88,16 +88,6 @@ unsigned char* Image::data() const {
    return this->_data;
 }
 
-void Image::set(int width, int height, unsigned char* data) {
-   if (this->_width == width && this->_height == height) {
-      for (int idx = 0; idx < width * height * 3; idx += 3) {
-         this->set(idx, {data[idx], data[idx + 1], data[idx + 2]});
-      }
-   } else {
-      std::cerr << "set(): Dimensions must match!" << std::endl;
-   }
-}
-
 bool Image::load(const std::string& filename, bool flip) {
    std::cout << "Loading " << filename << std::endl;
    int n;
@@ -149,6 +139,14 @@ void Image::set(int i, const Pixel& c) {
    this->_data[idx] = c.r;
    this->_data[idx + 1] = c.g;
    this->_data[idx + 2] = c.b;
+}
+
+void Image::set(int width, int height, unsigned char* data) {
+   if (this->_width == width && this->_height == height) {
+      memcpy(this->_data, data, width * height * 3);
+   } else {
+      std::cerr << "set(): Dimensions must match!" << std::endl;
+   }
 }
 
 Image Image::resize(int w, int h) const {
@@ -673,7 +671,6 @@ Image Image::gradient(const Pixel& px1, const Pixel& px2, const std::string& ori
       if (orientation == "vertical") {
          progress = (float) i / this->_height;
       }
-      std::cout << progress << std::endl;
       for (int j = 0; j < this->_width; j++) {
          if (orientation == "horizontal") {
             progress = (float) j / this->_width;
@@ -683,9 +680,9 @@ Image Image::gradient(const Pixel& px1, const Pixel& px2, const std::string& ori
          b = (unsigned char) (px1.b * progress + px2.b * (1 - progress));
          filter.set(i, j, {r, g, b});
       }
-      std::cout << (int) r << " " << (int) g << " " << (int) b << std::endl;
    }
-   return this->alphaBlend(filter, 0.8);
+   std::cout << filter << std::endl;
+   return this->alphaBlend(filter, 0.5);
 }
 
 Image Image::sharpen() const {

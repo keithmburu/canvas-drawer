@@ -11,6 +11,7 @@
 #include <string>
 #include <vector>
 #include "image.h"
+#include <cmath>
 
 namespace agl
 {
@@ -57,13 +58,23 @@ namespace agl
 
       void drawLine();
 
-      void drawLineLow(Vertex& beginVertex, Vertex& endVertex);
+      void drawLineLow(const Vertex& beginVertex, const Vertex& endVertex);
 
-      void drawLineHigh(Vertex& beginVertex, Vertex& endVertex);
+      void drawLineHigh(const Vertex& beginVertex, const Vertex& endVertex);
 
       void drawTriangle();
 
-      void colorPixel(int idx, const Pixel& color, const std::string& blendMode);
+      void rectangle(int xLeft, int xRight, int yBottom, int yTop);
+      
+      void circle(int centerX, int centerY, int radius);
+
+      void star(int centerX, int centerY, int radius);
+
+      void rose(int centerX, int centerY, int radius);
+
+      int implicitEqn(int x, int y, const Vertex& a, const Vertex& b);
+
+      void colorPixel(int i, int j, const Pixel& color, const std::string& blendMode);
 
       void gradient(const Pixel& a, const Pixel& b, const std::string& orientation);
 

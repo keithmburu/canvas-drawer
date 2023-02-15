@@ -54,6 +54,8 @@ namespace agl
       // Fill the canvas with the given background color
       void background(unsigned char r, unsigned char g, unsigned char b);
 
+      void toggleShapeFill();
+
       void drawPoint();
 
       void drawLine();
@@ -64,25 +66,26 @@ namespace agl
 
       void drawTriangle();
 
-      void rectangle(int xLeft, int xRight, int yBottom, int yTop);
+      void rectangle(int xLeft, int yBottom, int xRight, int yTop);
       
       void circle(int centerX, int centerY, int radius);
 
       void star(int centerX, int centerY, int radius);
 
-      void rose(int centerX, int centerY, int radius);
+      void rose(int centerX, int centerY, int a, int n, int d);
 
       int implicitEqn(int x, int y, const Vertex& a, const Vertex& b);
 
       void colorPixel(int i, int j, const Pixel& color, const std::string& blendMode);
 
-      void gradient(const Pixel& a, const Pixel& b, const std::string& orientation);
+      void gradient(const Pixel& a, const Pixel& b, const std::string& orientation, float alpha);
 
    private:
       Image _canvas;
       PrimitiveType _currentType;
       Pixel _currentColor;
       std::vector<Vertex> _vertices;
+      bool _fillShapes;
    };
 }
 

@@ -658,8 +658,8 @@ Image Image::distort(const std::string& orientation) const {
    return result;
 }
 
-Image Image::gradient(const Pixel& px1, const Pixel& px2, const std::string& orientation) const {
-   std::cout << "Applying " << orientation << " color gradient with colors " << (int) px1.r << " " << (int) px1.g << " " << (int) px1.b << " and " << (int) px2.r << " " << (int) px2.g << " " << (int) px2.b << std::endl;
+Image Image::gradient(const Pixel& px1, const Pixel& px2, const std::string& orientation, float alpha) const {
+   std::cout << "Applying " << orientation << " color gradient with colors " << (int) px1.r << " " << (int) px1.g << " " << (int) px1.b << " and " << (int) px2.r << " " << (int) px2.g << " " << (int) px2.b << " and alpha = " << alpha << std::endl;
    Image filter(*this);
    if (orientation != "vertical" && orientation != "horizontal") {
       std::cerr << "Invalid orientation argument!" << std::endl;
@@ -681,8 +681,7 @@ Image Image::gradient(const Pixel& px1, const Pixel& px2, const std::string& ori
          filter.set(i, j, {r, g, b});
       }
    }
-   std::cout << filter << std::endl;
-   return this->alphaBlend(filter, 0.5);
+   return this->alphaBlend(filter, alpha);
 }
 
 Image Image::sharpen() const {

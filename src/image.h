@@ -221,7 +221,7 @@ class Image {
   Image distort(const std::string& orientation) const;
 
   // Apply color gradient
-  Image gradient(const Pixel& px1, const Pixel& px2, const std::string& orientation) const;
+  Image gradient(const Pixel& px1, const Pixel& px2, const std::string& orientation, float alpha) const;
 
   // Emphasize edges in image using unsharp mask filtering
   Image sharpen() const;

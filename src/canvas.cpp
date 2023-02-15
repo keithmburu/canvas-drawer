@@ -9,6 +9,7 @@ using namespace agl;
 Canvas::Canvas(int w, int h) : _canvas(w, h)
 {
    _currentType = UNDEFINED;
+   _fillShapes = true;
 }
 
 Canvas::~Canvas()
@@ -56,10 +57,14 @@ void Canvas::background(unsigned char r, unsigned char g, unsigned char b)
    }
 }
 
+void Canvas::toggleShapeFill() {
+   _fillShapes = !_fillShapes;
+}
+
 void Canvas::drawPoint() 
 {
    if (_vertices.size() < 1) {
-      cerr << "Less than 1 point vertex provided" << endl;
+      cerr << "No point vertices provided" << endl;
       exit(1);
    } 
    for (auto it = _vertices.begin(); it < _vertices.end(); it += 1) { 
@@ -176,8 +181,15 @@ void Canvas::drawTriangle()
             float alpha = (float) implicitEqn(x, y, vertexB, vertexC) / fAlpha;
             float beta = (float) implicitEqn(x, y, vertexA, vertexC) / fBeta;
             float gamma = (float) implicitEqn(x, y, vertexA, vertexB) / fGamma;
-            if (alpha >= 0 && beta  >= 0 && gamma >= 0) {
+            bool colorCondition;
+            if (_fillShapes) {
+               colorCondition = (alpha >= 0 && beta  >= 0 && gamma >= 0);
+            } else {
+               colorCondition = ((alpha == 0 && beta <= 1 && gamma <= 1) || (alpha <= 1 && beta == 0 && gamma <= 1) || (alpha <= 1 && beta <= 1 && gamma == 0));
+            }
+            if (colorCondition) {
                // Avoid overlap
+               // OVERLAP CONDITION MESSES WITH OUTLINE FILL
                if ((alpha > 0 || fAlpha * implicitEqn(-1, -1, vertexB, vertexC) > 0) && (beta > 0 || fBeta * implicitEqn(-1, -1, vertexA, vertexC) > 0) && (gamma > 0 || fGamma * implicitEqn(-1, -1, vertexA, vertexB) > 0)) {
                   unsigned char r = vertexA.color.r * alpha + vertexB.color.r * beta + vertexC.color.r * gamma;
                   unsigned char g = vertexA.color.g * alpha + vertexB.color.g * beta + vertexC.color.g * gamma;
@@ -192,6 +204,8 @@ void Canvas::drawTriangle()
 
 void Canvas::rectangle(int xLeft, int xRight, int yBottom, int yTop)
 {
+   std::cout << "Drawing rectangle from " << xLeft << " " << yBottom << " to " << xRight << " " << yTop << std::endl;
+   this->begin(TRIANGLES);
    this->vertex(xLeft, yBottom);
    this->vertex(xLeft, yTop);
    this->vertex(xRight, yTop);
@@ -199,11 +213,13 @@ void Canvas::rectangle(int xLeft, int xRight, int yBottom, int yTop)
    this->vertex(xRight, yBottom);
    this->vertex(xRight, yTop);
    this->vertex(xLeft, yBottom);
-   drawTriangle();
+   this->end();
 }
 
 void Canvas::circle(int centerX, int centerY, int radius)
 {
+   std::cout << "Drawing circle with center " << centerX << " " << centerY << " and radius " << radius << std::endl;
+   this->begin(TRIANGLES);
    int NUM_TRIANGLES = 32;
    float theta = 0;
    float dTheta = (float) (2 * M_PI) / NUM_TRIANGLES;
@@ -218,10 +234,12 @@ void Canvas::circle(int centerX, int centerY, int radius)
       this->vertex(firstX, firstY);
       this->vertex(secondX, secondY);
    }
-   drawTriangle();
+   this->end();
 }
 
 void Canvas::star(int centerX, int centerY, int radius) {
+   std::cout << "Drawing star with center " << centerX << " " << centerY << " and radius " << radius << std::endl;
+   this->begin(TRIANGLES);
    this->vertex(centerX - (radius / 2), centerY);
    this->vertex(centerX + (radius / 2), centerY);
    this->vertex(centerX, centerY + radius);
@@ -237,33 +255,38 @@ void Canvas::star(int centerX, int centerY, int radius) {
    this->vertex(centerX, centerY - (radius / 2));
    this->vertex(centerX, centerY + (radius / 2));
    this->vertex(centerX - radius, centerY);
-   drawTriangle();
+   this->end();
 }
 
-void Canvas::rose(int centerX, int centerY, int radius) {
-   int x, y;
+void Canvas::rose(int centerX, int centerY, int a, int n, int d) {
+   std::cout << "Drawing rose with center " << centerX << " " << centerY << ", a = " << a << " and k = " << n << " / " << d << std::endl;
+   this->begin(POINTS);
    float r;
-   float a = radius, k = 7.0f / 4;
+   float k = (float) n / d;
+   int x, y;
    for (float theta = 0; theta < 2 * M_PI * 10; theta += 0.017) {
       r = a * cos(k * theta);
-      x = centerX + (r * cos(theta));
-      y = centerY + (r * sin(theta));
+      // why
+      x = r * cos(theta) + centerY;
+      y = r * sin(theta) + centerX;
       this->vertex(x, y);
    }
-   drawPoint();
+   this->end();
 }
 
 void Canvas::colorPixel(int x, int y, const Pixel& color, const string& blendMode) {
-   Pixel origPx = _canvas.get(y, x);
-   Pixel newPx;
-   if (blendMode == "set") {
-      newPx = color;
-   } else if (blendMode == "add") {
-      newPx = {(unsigned char) (color.r + origPx.r), (unsigned char) (color.g + origPx.g), (unsigned char) (color.b + origPx.b)};
-   } else if (blendMode == "difference") {
-      newPx = {(unsigned char) abs(color.r - origPx.r), (unsigned char) abs(color.g - origPx.g), (unsigned char) abs(color.b - origPx.b)};
-   }   
-   _canvas.set(y, x, newPx);
+   if (0 <= x && x < _canvas.width() && 0 <= y && y < _canvas.height()) {
+      Pixel origPx = _canvas.get(y, x);
+      Pixel newPx;
+      if (blendMode == "set") {
+         newPx = color;
+      } else if (blendMode == "add") {
+         newPx = {(unsigned char) (color.r + origPx.r), (unsigned char) (color.g + origPx.g), (unsigned char) (color.b + origPx.b)};
+      } else if (blendMode == "difference") {
+         newPx = {(unsigned char) abs(color.r - origPx.r), (unsigned char) abs(color.g - origPx.g), (unsigned char) abs(color.b - origPx.b)};
+      }   
+      _canvas.set(y, x, newPx);
+   }
 }
 
 int Canvas::implicitEqn(int x, int y, const Vertex& a, const Vertex& b) {
@@ -272,7 +295,7 @@ int Canvas::implicitEqn(int x, int y, const Vertex& a, const Vertex& b) {
    return f;
 }
 
-void Canvas::gradient(const Pixel& a, const Pixel& b, const string& orientation) {
-   Image gradientImg = _canvas.gradient(a, b, orientation);
+void Canvas::gradient(const Pixel& a, const Pixel& b, const string& orientation, float alpha) {
+   Image gradientImg = _canvas.gradient(a, b, orientation, alpha);
    _canvas.set(gradientImg.width(), gradientImg.height(), gradientImg.data());
 }

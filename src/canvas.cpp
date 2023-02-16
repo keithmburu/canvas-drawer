@@ -35,6 +35,9 @@ void Canvas::end()
       drawLine();
    } else if (_currentType == TRIANGLES) {
       drawTriangle();
+   } else if (_currentType == UNDEFINED) {
+      cerr << "Undefined primitive type" << endl;
+      exit(6);
    }
    _vertices.clear();
 }
@@ -196,7 +199,6 @@ void Canvas::drawTriangle()
             }
             if (colorCondition) {
                // Avoid overlap
-               // OVERLAP CONDITION MESSES WITH OUTLINE FILL
                if ((alpha > 0 || fAlpha * implicitEqn(-1, -1, vertexB, vertexC) > 0) && (beta > 0 || fBeta * implicitEqn(-1, -1, vertexA, vertexC) > 0) && (gamma > 0 || fGamma * implicitEqn(-1, -1, vertexA, vertexB) > 0)) {
                   unsigned char r = vertexA.color.r * alpha + vertexB.color.r * beta + vertexC.color.r * gamma;
                   unsigned char g = vertexA.color.g * alpha + vertexB.color.g * beta + vertexC.color.g * gamma;
@@ -296,6 +298,8 @@ void Canvas::colorPixel(int x, int y, const Pixel& color) {
          newPx = {(unsigned char) (color.r + origPx.r), (unsigned char) (color.g + origPx.g), (unsigned char) (color.b + origPx.b)};
       } else if (_blendMode == "difference") {
          newPx = {(unsigned char) abs(color.r - origPx.r), (unsigned char) abs(color.g - origPx.g), (unsigned char) abs(color.b - origPx.b)};
+      } else if (_blendMode == "average") {
+         newPx = {(unsigned char) (0.5 * color.r + 0.5 * origPx.r), (unsigned char) (0.5 * color.g + 0.5 * origPx.g), (unsigned char) (0.5 * color.b + 0.5 * origPx.b)};
       }   
       _canvas.set(y, x, newPx);
    }

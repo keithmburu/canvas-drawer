@@ -26,14 +26,14 @@ int main(int argc, char** argv)
    drawer.end();
    drawer.save("../images/test/point.png");
 
-   test_line(drawer, 0, 50, 100, 50, "horizontal-line.png");
-   test_line(drawer, 50, 0, 50, 100, "vertical-line.png");
-   test_line(drawer, 0, 0, 100, 100, "diagonal-line-1.png"); // slope = 1
-   test_line(drawer, 25, 10, 75, 25,  "h-lessthan-w-line-1.png"); // slope H < W
-   test_line(drawer, 25, 25, 75, 75,  "w-lessthan-h-line-1.png"); // slope W < H
-   test_line(drawer, 0, 100, 100, 0, "diagonal-line-2.png"); // slope H < W
-   test_line(drawer, 25, 90, 75, 75,  "h-lessthan-w-line-2.png"); // slope H < W
-   test_line(drawer, 25, 90, 75, 25,  "w-lessthan-h-line-2.png"); // slope W < H
+   test_line(drawer, 0, 50, 100, 50, "../images/test/horizontal-line.png");
+   test_line(drawer, 50, 0, 50, 100, "../images/test/vertical-line.png");
+   test_line(drawer, 0, 0, 100, 100, "../images/test/diagonal-line-1.png"); // slope = 1
+   test_line(drawer, 25, 10, 75, 25,  "../images/test/h-lessthan-w-line-1.png"); // slope H < W
+   test_line(drawer, 25, 25, 75, 75,  "../images/test/w-lessthan-h-line-1.png"); // slope W < H
+   test_line(drawer, 0, 100, 100, 0, "../images/test/diagonal-line-2.png"); // slope H < W
+   test_line(drawer, 25, 90, 75, 75,  "../images/test/h-lessthan-w-line-2.png"); // slope H < W
+   test_line(drawer, 25, 90, 75, 25,  "../images/test/w-lessthan-h-line-2.png"); // slope W < H
 
    // test line interpolation
    drawer.background(0, 0, 0);
@@ -84,7 +84,7 @@ int main(int argc, char** argv)
 
    // test gradient
    drawer.background(255, 255, 255);
-   drawer.gradient({0, 255, 0}, {255, 0, 255}, "vertical", 1);
+   drawer.gradient({0, 255, 0}, {0, 64, 0}, "vertical", 1);
    drawer.color(255, 255, 255);
    drawer.begin(LINES);
    drawer.vertex(0, 0);

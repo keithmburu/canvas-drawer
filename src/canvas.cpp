@@ -9,6 +9,7 @@ using namespace agl;
 Canvas::Canvas(int w, int h) : _canvas(w, h)
 {
    _currentType = UNDEFINED;
+   _blendMode = "set";
    _fillShapes = true;
 }
 
@@ -57,7 +58,13 @@ void Canvas::background(unsigned char r, unsigned char g, unsigned char b)
    }
 }
 
-void Canvas::toggleShapeFill() {
+void Canvas::changeBlendMode(const string& newBlendMode) 
+{
+   _blendMode = newBlendMode;
+}
+
+void Canvas::toggleShapeFill() 
+{
    _fillShapes = !_fillShapes;
 }
 
@@ -68,8 +75,8 @@ void Canvas::drawPoint()
       exit(1);
    } 
    for (auto it = _vertices.begin(); it < _vertices.end(); it += 1) { 
-       Vertex vertex = *it;
-      _canvas.set(vertex.x, vertex.y, vertex.color);
+      Vertex vertex = *it;
+      colorPixel(vertex.x, vertex.y, vertex.color);
    }
 }
 
@@ -119,7 +126,7 @@ void Canvas::drawLineLow(const Vertex& beginVertex, const Vertex& endVertex)
       unsigned char r = endVertex.color.r * (float) x / bx + beginVertex.color.r * (1 - (float) x / bx);
       unsigned char g = endVertex.color.g * (float) x / bx + beginVertex.color.g * (1 - (float) x / bx);
       unsigned char b = endVertex.color.b * (float) x / bx + beginVertex.color.b * (1 - (float) x / bx);
-      colorPixel(x, y, {r, g, b}, "set");
+      colorPixel(x, y, {r, g, b});
       if (F > 0) {
          y += dy;
          F += 2 * (H - W);
@@ -144,7 +151,7 @@ void Canvas::drawLineHigh(const Vertex& beginVertex, const Vertex& endVertex)
       unsigned char r = endVertex.color.r * (float) y / by + beginVertex.color.r * (1 - (float) y / by);
       unsigned char g = endVertex.color.g * (float) y / by + beginVertex.color.g * (1 - (float) y / by);
       unsigned char b = endVertex.color.b * (float) y / by + beginVertex.color.b * (1 - (float) y / by);
-      colorPixel(x, y, {r, g, b}, "set");
+      colorPixel(x, y, {r, g, b});
       if (F > 0) {
          x += dx;
          F += 2 * (W - H);
@@ -194,7 +201,7 @@ void Canvas::drawTriangle()
                   unsigned char r = vertexA.color.r * alpha + vertexB.color.r * beta + vertexC.color.r * gamma;
                   unsigned char g = vertexA.color.g * alpha + vertexB.color.g * beta + vertexC.color.g * gamma;
                   unsigned char b = vertexA.color.b * alpha + vertexB.color.b * beta + vertexC.color.b * gamma;
-                  colorPixel(x, y, {r, g, b}, "set");
+                  colorPixel(x, y, {r, g, b});
                }
             }
          }
@@ -204,7 +211,7 @@ void Canvas::drawTriangle()
 
 void Canvas::rectangle(int xLeft, int xRight, int yBottom, int yTop)
 {
-   std::cout << "Drawing rectangle from " << xLeft << " " << yBottom << " to " << xRight << " " << yTop << std::endl;
+   cout << "Drawing rectangle from " << xLeft << " " << yBottom << " to " << xRight << " " << yTop << endl;
    this->begin(TRIANGLES);
    this->vertex(xLeft, yBottom);
    this->vertex(xLeft, yTop);
@@ -218,27 +225,33 @@ void Canvas::rectangle(int xLeft, int xRight, int yBottom, int yTop)
 
 void Canvas::circle(int centerX, int centerY, int radius)
 {
-   std::cout << "Drawing circle with center " << centerX << " " << centerY << " and radius " << radius << std::endl;
-   this->begin(TRIANGLES);
-   int NUM_TRIANGLES = 32;
-   float theta = 0;
-   float dTheta = (float) (2 * M_PI) / NUM_TRIANGLES;
-   int firstX, firstY, secondX, secondY;
-   for (int i = 0; i < NUM_TRIANGLES; i++) {
-      firstX = centerX + (radius * cos(theta));
-      firstY = centerY + (radius * sin(theta));
-      theta += dTheta;
-      secondX = centerX + (radius * cos(theta));
-      secondY = centerY + (radius * sin(theta));
+   cout << "Drawing circle with center " << centerX << " " << centerY << " and radius " << radius << endl;
+   if (radius == 0) {
+      this->begin(POINTS);
       this->vertex(centerX, centerY);
-      this->vertex(firstX, firstY);
-      this->vertex(secondX, secondY);
+      this->end();
+   } else {
+      this->begin(TRIANGLES);
+      int NUM_TRIANGLES = 32;
+      float theta = 0;
+      float dTheta = (float) (2 * M_PI) / NUM_TRIANGLES;
+      int firstX, firstY, secondX, secondY;
+      for (int i = 0; i < NUM_TRIANGLES; i++) {
+         firstX = centerX + (radius * cos(theta));
+         firstY = centerY + (radius * sin(theta));
+         theta += dTheta;
+         secondX = centerX + (radius * cos(theta));
+         secondY = centerY + (radius * sin(theta));
+         this->vertex(centerX, centerY);
+         this->vertex(firstX, firstY);
+         this->vertex(secondX, secondY);
+      }
+      this->end();
    }
-   this->end();
 }
 
 void Canvas::star(int centerX, int centerY, int radius) {
-   std::cout << "Drawing star with center " << centerX << " " << centerY << " and radius " << radius << std::endl;
+   cout << "Drawing star with center " << centerX << " " << centerY << " and radius " << radius << endl;
    this->begin(TRIANGLES);
    this->vertex(centerX - (radius / 2), centerY);
    this->vertex(centerX + (radius / 2), centerY);
@@ -259,30 +272,29 @@ void Canvas::star(int centerX, int centerY, int radius) {
 }
 
 void Canvas::rose(int centerX, int centerY, int a, int n, int d) {
-   std::cout << "Drawing rose with center " << centerX << " " << centerY << ", a = " << a << " and k = " << n << " / " << d << std::endl;
+   cout << "Drawing rose with center " << centerX << " " << centerY << ", a = " << a << " and k = " << n << " / " << d << endl;
    this->begin(POINTS);
    float r;
    float k = (float) n / d;
    int x, y;
    for (float theta = 0; theta < 2 * M_PI * 10; theta += 0.017) {
       r = a * cos(k * theta);
-      // why
-      x = r * cos(theta) + centerY;
-      y = r * sin(theta) + centerX;
+      x = r * cos(theta) + centerX;
+      y = r * sin(theta) + centerY;
       this->vertex(x, y);
    }
    this->end();
 }
 
-void Canvas::colorPixel(int x, int y, const Pixel& color, const string& blendMode) {
+void Canvas::colorPixel(int x, int y, const Pixel& color) {
    if (0 <= x && x < _canvas.width() && 0 <= y && y < _canvas.height()) {
       Pixel origPx = _canvas.get(y, x);
       Pixel newPx;
-      if (blendMode == "set") {
+      if (_blendMode == "set") {
          newPx = color;
-      } else if (blendMode == "add") {
+      } else if (_blendMode == "add") {
          newPx = {(unsigned char) (color.r + origPx.r), (unsigned char) (color.g + origPx.g), (unsigned char) (color.b + origPx.b)};
-      } else if (blendMode == "difference") {
+      } else if (_blendMode == "difference") {
          newPx = {(unsigned char) abs(color.r - origPx.r), (unsigned char) abs(color.g - origPx.g), (unsigned char) abs(color.b - origPx.b)};
       }   
       _canvas.set(y, x, newPx);

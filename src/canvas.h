@@ -54,6 +54,8 @@ namespace agl
       // Fill the canvas with the given background color
       void background(unsigned char r, unsigned char g, unsigned char b);
 
+      void changeBlendMode(const std::string& newBlendMode);
+
       void toggleShapeFill();
 
       void drawPoint();
@@ -76,7 +78,7 @@ namespace agl
 
       int implicitEqn(int x, int y, const Vertex& a, const Vertex& b);
 
-      void colorPixel(int i, int j, const Pixel& color, const std::string& blendMode);
+      void colorPixel(int i, int j, const Pixel& color);
 
       void gradient(const Pixel& a, const Pixel& b, const std::string& orientation, float alpha);
 
@@ -85,6 +87,7 @@ namespace agl
       PrimitiveType _currentType;
       Pixel _currentColor;
       std::vector<Vertex> _vertices;
+      std::string _blendMode;
       bool _fillShapes;
    };
 }

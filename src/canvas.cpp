@@ -174,22 +174,23 @@ void Canvas::drawTriangle()
       exit(5);
    }
    for (auto it = _vertices.begin(); it < _vertices.end(); it += 3) { 
-       Vertex vertexA = *it;
-       Vertex vertexB = *(it + 1);
-       Vertex vertexC = *(it + 2);
+      sortCounterClockwise(it);
+      Vertex vertexA = *it;
+      Vertex vertexB = *(it + 1);
+      Vertex vertexC = *(it + 2);
       // create bounding box
       int xMin = min({vertexA.x, vertexB.x, vertexC.x});
       int xMax = max({vertexA.x, vertexB.x, vertexC.x});
       int yMin = min({vertexA.y, vertexB.y, vertexC.y});
       int yMax = max({vertexA.y, vertexB.y, vertexC.y});
       int fAlpha = implicitEqn(vertexA.x, vertexA.y, vertexB, vertexC);
-      int fBeta = implicitEqn(vertexB.x, vertexB.y, vertexA, vertexC);
+      int fBeta = implicitEqn(vertexB.x, vertexB.y, vertexC, vertexA);
       int fGamma = implicitEqn(vertexC.x, vertexC.y, vertexA, vertexB);
       for (int y = yMin; y <= yMax; y++) {
          for (int x = xMin; x <= xMax; x++) {
             // convert to barycentric coordinates
             float alpha = (float) implicitEqn(x, y, vertexB, vertexC) / fAlpha;
-            float beta = (float) implicitEqn(x, y, vertexA, vertexC) / fBeta;
+            float beta = (float) implicitEqn(x, y, vertexC, vertexA) / fBeta;
             float gamma = (float) implicitEqn(x, y, vertexA, vertexB) / fGamma;
             bool colorCondition;
             if (_fillShapes) {
@@ -209,6 +210,30 @@ void Canvas::drawTriangle()
          }
       }
    }
+}
+
+void Canvas::sortCounterClockwise(const vector<Vertex>::iterator& it) {
+   Vertex vertexA = *it;
+   Vertex vertexB = *(it + 1);
+   Vertex vertexC = *(it + 2);
+   cout << "unsorted" << endl;
+   cout << vertexA.x << " " << vertexA.y << endl;
+   cout << vertexB.x << " " << vertexB.y << endl;
+   cout << vertexC.x << " " << vertexC.y << endl;
+   int centroidX = (vertexA.x + vertexB.x + vertexC.x) / 3;
+   int centroidY = (vertexA.y + vertexB.y + vertexC.y) / 3;
+   sort(it, it + 2, [centroidX, centroidY](const Vertex& v1, const Vertex& v2) {
+      int v1Angle = atan2(v1.y - centroidY, v1.x - centroidX);
+      int v2Angle = atan2(v2.y - centroidY, v2.x - centroidX);
+      return v1Angle < v2Angle;
+   });
+   vertexA = *it;
+   vertexB = *(it + 1);
+   vertexC = *(it + 2);
+   cout << "sorted" << endl;
+   cout << vertexA.x << " " << vertexA.y << endl;
+   cout << vertexB.x << " " << vertexB.y << endl;
+   cout << vertexC.x << " " << vertexC.y << endl;
 }
 
 void Canvas::rectangle(int xLeft, int xRight, int yBottom, int yTop)

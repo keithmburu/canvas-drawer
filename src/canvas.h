@@ -68,6 +68,8 @@ namespace agl
 
       void drawTriangle();
 
+      void sortCounterClockwise(const std::vector<Vertex>::iterator& it);
+
       void rectangle(int xLeft, int yBottom, int xRight, int yTop);
       
       void circle(int centerX, int centerY, int radius);

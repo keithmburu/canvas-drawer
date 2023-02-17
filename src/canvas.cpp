@@ -42,11 +42,13 @@ void Canvas::end()
    _vertices.clear();
 }
 
-void Canvas::vertex(int x, int y)
+Vertex Canvas::vertex(int x, int y)
 {
    x = max(0, min(x, _canvas.width() - 1));
    y = max(0, min(y, _canvas.height() - 1));
-   _vertices.push_back({x, y, _currentColor});
+   Vertex v = {x, y, _currentColor};
+   _vertices.push_back(v);
+   return v;
 }
 
 void Canvas::color(unsigned char r, unsigned char g, unsigned char b)
@@ -200,7 +202,7 @@ void Canvas::drawTriangle()
             }
             if (colorCondition) {
                // Avoid overlap
-               if ((alpha > 0 || fAlpha * implicitEqn(-1, -1, vertexB, vertexC) > 0) && (beta > 0 || fBeta * implicitEqn(-1, -1, vertexA, vertexC) > 0) && (gamma > 0 || fGamma * implicitEqn(-1, -1, vertexA, vertexB) > 0)) {
+               if ((alpha > 0 || fAlpha * implicitEqn(-1.1, -1.1, vertexB, vertexC) > 0) && (beta > 0 || fBeta * implicitEqn(-1.1, -1.1, vertexA, vertexC) > 0) && (gamma > 0 || fGamma * implicitEqn(-1.1, -1.1, vertexA, vertexB) > 0)) {
                   unsigned char r = vertexA.color.r * alpha + vertexB.color.r * beta + vertexC.color.r * gamma;
                   unsigned char g = vertexA.color.g * alpha + vertexB.color.g * beta + vertexC.color.g * gamma;
                   unsigned char b = vertexA.color.b * alpha + vertexB.color.b * beta + vertexC.color.b * gamma;
@@ -266,7 +268,8 @@ void Canvas::circle(int centerX, int centerY, int radius)
    }
 }
 
-void Canvas::star(int centerX, int centerY, int radius) {
+void Canvas::star(int centerX, int centerY, int radius) 
+{
    cout << "Drawing star with center " << centerX << " " << centerY << " and radius " << radius << endl;
    this->begin(TRIANGLES);
    this->vertex(centerX - (radius / 2), centerY);
@@ -287,7 +290,8 @@ void Canvas::star(int centerX, int centerY, int radius) {
    this->end();
 }
 
-void Canvas::rose(int centerX, int centerY, int a, int n, int d) {
+void Canvas::rose(int centerX, int centerY, int a, int n, int d) 
+{
    cout << "Drawing rose with center " << centerX << " " << centerY << ", a = " << a << " and k = " << n << " / " << d << endl;
    this->begin(POINTS);
    float r;
@@ -302,7 +306,58 @@ void Canvas::rose(int centerX, int centerY, int a, int n, int d) {
    this->end();
 }
 
-void Canvas::colorPixel(int x, int y, const Pixel& color) {
+void Canvas::snowflake(int xStart, int yStart, int width, int recursionDepth) 
+{
+   this->begin(TRIANGLES);
+   snowflakeHelper(xStart, yStart, xStart + width, yStart, recursionDepth, 60);
+   this->end();
+}
+
+void Canvas::snowflakeHelper(int nextV1X, int nextV1Y, int nextV2X, int nextV2Y, int recursionDepth, int vertex3Degrees) 
+{
+   Vertex v1 = this->vertex(nextV1X, nextV1Y);
+   Vertex v2 = this->vertex(nextV2X, nextV2Y);
+   int r = sqrt(pow(v2.x - v1.x, 2) + pow(abs(v2.y - v1.y), 2));
+   float theta = vertex3Degrees * (M_PI / 180) + atan2(v2.y - v1.y, v2.x - v1.x);
+   Vertex v3 = this->vertex(v1.x + (r * cos(theta)), v1.y + (r * sin(theta)));
+
+   // std::cout << "(" << v1.x << ", " << v1.y << ")" << endl;
+   // std::cout << "(" << v2.x << ", " << v2.y << ")" << endl;
+   // std::cout << "(" << v3.x << ", " << v3.y << ")" << "\n" << endl;
+
+   if (recursionDepth - 1 > 0) {
+      int X[3] = { v1.x, v2.x, v3.x };
+      int Y[3] = { v1.y, v2.y, v3.y };
+
+      for (int i = 0; i < 3; i++) {
+         int nextV1X = X[i] + (X[(i + 1) % 3] - X[i]) * 0.333;
+         int nextV1Y = Y[i] + (Y[(i + 1) % 3] - Y[i]) * 0.333;
+         int nextV2X = X[i] + (X[(i + 1) % 3] - X[i]) * 0.666;
+         int nextV2Y = Y[i] + (Y[(i + 1) % 3] - Y[i]) * 0.666;
+         int v4X = X[i] + (nextV1X - X[i]) * 0.333;
+         int v4Y = Y[i] + (nextV1Y - Y[i]) * 0.333;
+         int v5X = X[i] + (nextV1X - X[i]) * 0.666;
+         int v5Y = Y[i] + (nextV1Y - Y[i]) * 0.666;
+         int v6X = nextV2X + (X[(i + 1) % 3] - nextV2X) * 0.333;
+         int v6Y = nextV2Y + (Y[(i + 1) % 3] - nextV2Y) * 0.333;
+         int v7X = nextV2X + (X[(i + 1) % 3] - nextV2X) * 0.666;
+         int v7Y = nextV2Y + (Y[(i + 1) % 3] - nextV2Y) * 0.666;
+
+         if (vertex3Degrees == 300) {
+            snowflakeHelper(v4X, v4Y, v5X, v5Y, recursionDepth - 2, 60);
+            snowflakeHelper(nextV1X, nextV1Y, nextV2X, nextV2Y, recursionDepth - 1, 60);
+            snowflakeHelper(v6X, v6Y, v7X, v7Y, recursionDepth - 2, 60);
+         } else {
+            snowflakeHelper(v4X, v4Y, v5X, v5Y, recursionDepth - 2, 300);
+            snowflakeHelper(nextV1X, nextV1Y, nextV2X, nextV2Y, recursionDepth - 1, 300);
+            snowflakeHelper(v6X, v6Y, v7X, v7Y, recursionDepth - 2, 300);
+         }
+      }
+   }
+}
+
+void Canvas::colorPixel(int x, int y, const Pixel& color) 
+{
    if (0 <= x && x < _canvas.width() && 0 <= y && y < _canvas.height()) {
       Pixel origPx = _canvas.get(y, x);
       Pixel newPx;
@@ -319,13 +374,15 @@ void Canvas::colorPixel(int x, int y, const Pixel& color) {
    }
 }
 
-int Canvas::implicitEqn(int x, int y, const Vertex& a, const Vertex& b) {
+int Canvas::implicitEqn(int x, int y, const Vertex& a, const Vertex& b) 
+{
    int H = b.y - a.y, W = b.x - a.x;
    int f = W * (y - a.y) - H * (x - a.x);
    return f;
 }
 
-void Canvas::gradient(const Pixel& a, const Pixel& b, const string& orientation, float alpha) {
+void Canvas::gradient(const Pixel& a, const Pixel& b, const string& orientation, float alpha) 
+{
    Image gradientImg = _canvas.gradient(a, b, orientation, alpha);
    _canvas.set(gradientImg.width(), gradientImg.height(), gradientImg.data());
 }

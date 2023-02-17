@@ -46,7 +46,7 @@ namespace agl
 
       // Specifiy a vertex at raster position (x,y)
       // x corresponds to the column; y to the row
-      void vertex(int x, int y);
+      Vertex vertex(int x, int y);
 
       // Specify a color. Color components are in range [0,255]
       void color(unsigned char r, unsigned char g, unsigned char b);
@@ -77,6 +77,10 @@ namespace agl
       void star(int centerX, int centerY, int radius);
 
       void rose(int centerX, int centerY, int a, int n, int d);
+
+      void snowflake(int xLeft, int yBottom, int width, int recursionDepth);
+
+      void snowflakeHelper(int nextV1X, int nextV1Y, int nextV2X, int nextV2Y, int recursionDepth, int vertex3Degrees);
 
       int implicitEqn(int x, int y, const Vertex& a, const Vertex& b);
 

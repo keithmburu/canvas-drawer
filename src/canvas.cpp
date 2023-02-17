@@ -44,8 +44,8 @@ void Canvas::end()
 
 void Canvas::vertex(int x, int y)
 {
-   x = min(x, _canvas.width() - 1);
-   y = min(y, _canvas.height() - 1);
+   x = max(0, min(x, _canvas.width() - 1));
+   y = max(0, min(y, _canvas.height() - 1));
    _vertices.push_back({x, y, _currentColor});
 }
 

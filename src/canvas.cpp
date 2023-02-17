@@ -216,24 +216,13 @@ void Canvas::sortCounterClockwise(const vector<Vertex>::iterator& it) {
    Vertex vertexA = *it;
    Vertex vertexB = *(it + 1);
    Vertex vertexC = *(it + 2);
-   cout << "unsorted" << endl;
-   cout << vertexA.x << " " << vertexA.y << endl;
-   cout << vertexB.x << " " << vertexB.y << endl;
-   cout << vertexC.x << " " << vertexC.y << endl;
-   int centroidX = (vertexA.x + vertexB.x + vertexC.x) / 3;
-   int centroidY = (vertexA.y + vertexB.y + vertexC.y) / 3;
-   sort(it, it + 2, [centroidX, centroidY](const Vertex& v1, const Vertex& v2) {
-      int v1Angle = atan2(v1.y - centroidY, v1.x - centroidX);
-      int v2Angle = atan2(v2.y - centroidY, v2.x - centroidX);
+   float centroidX = (float) (vertexA.x + vertexB.x + vertexC.x) / 3;
+   float centroidY = (float) (vertexA.y + vertexB.y + vertexC.y) / 3;
+   sort(it, it + 3, [centroidX, centroidY](const Vertex& v1, const Vertex& v2) {
+      float v1Angle = atan2(v1.y - centroidY, v1.x - centroidX);
+      float v2Angle = atan2(v2.y - centroidY, v2.x - centroidX);
       return v1Angle < v2Angle;
    });
-   vertexA = *it;
-   vertexB = *(it + 1);
-   vertexC = *(it + 2);
-   cout << "sorted" << endl;
-   cout << vertexA.x << " " << vertexA.y << endl;
-   cout << vertexB.x << " " << vertexB.y << endl;
-   cout << vertexC.x << " " << vertexC.y << endl;
 }
 
 void Canvas::rectangle(int xLeft, int xRight, int yBottom, int yTop)

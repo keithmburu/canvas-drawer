@@ -32,15 +32,6 @@ namespace agl
       void save(const std::string& filename);
 
       // Draw primitives with a given type (either LINES or TRIANGLES)
-      // For example, the following draws a red line followed by a green line
-      // begin(LINES);
-      //    color(255,0,0);
-      //    vertex(0,0);
-      //    vertex(100,0);
-      //    color(0,255,0);
-      //    vertex(0, 0);
-      //    vertex(0,100);
-      // end();
       void begin(PrimitiveType type);
       void end();
 
@@ -54,38 +45,59 @@ namespace agl
       // Fill the canvas with the given background color
       void background(unsigned char r, unsigned char g, unsigned char b);
 
+      // Change how newly drawn pixel colors mix with existing pixel colors
+      // blend modes are "replace", "add", "difference", and "average"
       void changeBlendMode(const std::string& newBlendMode);
 
+      // Enable or disable shape outlining
       void toggleShapeFill();
 
-      void drawPoint();
+      // Color the pixels corresponding to one specified vertex each
+      void drawPoints();
 
-      void drawLine();
+      // Connect each pair of specified vertices with a rasterized line
+      void drawLines();
 
+      // Draw line with downward slope
       void drawLineLow(const Vertex& beginVertex, const Vertex& endVertex);
 
+      // Draw line with upward slope
       void drawLineHigh(const Vertex& beginVertex, const Vertex& endVertex);
 
-      void drawTriangle();
+      // Draw rasterized triangle for each set of three specified vertices
+      void drawTriangles();
 
+      // Order triangle vertices in counter-clockwise order
       void sortCounterClockwise(const std::vector<Vertex>::iterator& it);
 
+      // Draw rectangle as a composite of two rasterized triangles
       void rectangle(int xLeft, int yBottom, int xRight, int yTop);
       
+      // Draw circle as a composite of rasterized triangles
       void circle(int centerX, int centerY, int radius);
 
+      // Draw star as a composite of four rasterized triangles
       void star(int centerX, int centerY, int radius);
 
+      // Draw rose sinusoid using cosine function
+      // a determines the size, 1 <= n <= 7 and 1 <= d <= 9 determine the shape
       void rose(int centerX, int centerY, int a, int n, int d);
 
-      void snowflake(int xLeft, int yBottom, int width, int recursionDepth);
+      // Draw Koch snowflake with its base at xStart, yStart
+      // Size determined by width and complexity determined by recursionDepth
+      void snowflake(int xStart, int yStart, int width, int recursionDepth);
 
+      // Draw next triangle in the snowflake
+      // vertex3Degrees determines the angle that vertex 1 makes with vertex 3
       void snowflakeHelper(int nextV1X, int nextV1Y, int nextV2X, int nextV2Y, int recursionDepth, int vertex3Degrees);
 
+      // Compute where a point is in relation to a line
       int implicitEqn(int x, int y, const Vertex& a, const Vertex& b);
 
-      void colorPixel(int i, int j, const Pixel& color);
+      // Blend in new pixel value
+      void colorPixel(int x, int y, const Pixel& color);
 
+      // Apply a vertical or horizontal gradient to the canvas with two colors
       void gradient(const Pixel& a, const Pixel& b, const std::string& orientation, float alpha);
 
    private:

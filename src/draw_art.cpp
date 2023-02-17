@@ -142,6 +142,30 @@ int main(int argc, char** argv)
    }
 
    drawer.save("../images/art/art-5.png");
-   drawer.changeBlendMode("set");
+   drawer.changeBlendMode("replace");
+
+
+
+   //--------------------------- ART 6 ---------------------------
+   drawer.background(0, 0, 0);
+   drawer.color(255, 255, 255);
+   drawer.changeBlendMode("average");
+   int xStart, yStart, width;
+   for (int i = 1; i <= 300; i++) {
+      if (i % 5 <= 3) {
+         drawer.begin(POINTS);
+         x = rand() % WIDTH;
+         y = rand() % HEIGHT;
+         drawer.vertex(x, y);
+         drawer.end();
+      } else {
+         xStart = rand() % WIDTH;
+         yStart = max(20, rand() % HEIGHT);
+         width = rand() % ((WIDTH - xStart) / 10);
+         drawer.snowflake(xStart, yStart, width, 2);
+      }
+   }
+   drawer.changeBlendMode("replace");
+   drawer.save("../images/art/art-6.png");
 }
 

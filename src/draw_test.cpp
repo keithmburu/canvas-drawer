@@ -16,7 +16,7 @@ void test_line(Canvas& drawer, int ax, int ay, int bx, int by, const std::string
 
 int main(int argc, char** argv)
 {
-   // Canvas drawer(100, 100);
+   Canvas drawer(100, 100);
 
    // drawer.color(255, 255, 255);
 
@@ -112,42 +112,49 @@ int main(int argc, char** argv)
    // drawer.rose(50, 50, 30, 7, 4);
    // drawer.save("../images/test/rose.png");
 
-   // // test outlined shapes
-   // drawer.background(0, 0, 0);
-   // drawer.toggleShapeFill();
-   // drawer.begin(TRIANGLES);
-   // drawer.color(255, 0, 255);
-   // drawer.vertex(10, 10);
-   // drawer.vertex(10, 90);
-   // drawer.vertex(90, 90);
-   // drawer.color(255, 255, 0);
-   // drawer.vertex(90, 90);
-   // drawer.vertex(90, 10);
-   // drawer.vertex(10, 10);
-   // drawer.end();
-   // drawer.save("../images/test/outlined-quad.png");
-
-   // drawer.background(0, 0, 0);
-   // drawer.begin(TRIANGLES);
-   // drawer.color(255, 0, 255);
-   // drawer.vertex(10, 0);
-   // drawer.color(0, 255, 255);
-   // drawer.vertex(90, 50);
-   // drawer.color(255, 255, 0);
-   // drawer.vertex(10, 90);
-   // drawer.end();
-   // drawer.save("../images/test/outlined-triangle.png");
-
-   // drawer.toggleShapeFill();
-
-   // test snowflake
-   // Canvas drawer(100, 100);
-   Canvas drawer(1000, 1000);
+   // test outlined shapes
    drawer.background(0, 0, 0);
-   drawer.color(255, 255, 255);
-   // drawer.snowflake(15, 30, 70, 4);
-   drawer.snowflake(150, 300, 700, 4);
-   drawer.save("../images/test/snowflake.png");
+   drawer.toggleShapeFill();
+   drawer.begin(TRIANGLES);
+   drawer.color(255, 0, 255);
+   drawer.vertex(10, 10);
+   drawer.vertex(10, 90);
+   drawer.vertex(90, 90);
+   drawer.color(255, 255, 0);
+   drawer.vertex(90, 90);
+   drawer.vertex(90, 10);
+   drawer.vertex(10, 10);
+   drawer.end();
+   drawer.save("../images/test/outlined-quad.png");
+
+   drawer.background(0, 0, 0);
+   drawer.begin(TRIANGLES);
+   drawer.color(255, 0, 255);
+   drawer.vertex(10, 0);
+   drawer.color(0, 255, 255);
+   drawer.vertex(90, 50);
+   drawer.color(255, 255, 0);
+   drawer.vertex(10, 90);
+   drawer.end();
+   drawer.save("../images/test/outlined-triangle.png");
+
+   drawer.background(0, 0, 0);
+   drawer.circle(50, 50, 30);
+   drawer.save("../images/test/outlined-circle.png");
+
+   // // test snowflake
+   // Canvas drawer1(1000, 1000);
+   // // drawer1.toggleShapeFill();
+   // drawer1.background(0, 0, 0);
+   // drawer1.color(255, 255, 255);
+   // drawer1.snowflake(150, 300, 700, 1);
+   // drawer1.save("../images/test/snowflake-1.png");
+   // drawer1.snowflake(150, 300, 700, 2);
+   // drawer1.save("../images/test/snowflake-2.png");
+   // drawer1.snowflake(150, 300, 700, 4);
+   // drawer1.save("../images/test/snowflake-4.png");
+
+   // // drawer1.toggleShapeFill();
    
    return 0;
 }

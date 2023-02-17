@@ -9,7 +9,7 @@ using namespace agl;
 Canvas::Canvas(int w, int h) : _canvas(w, h)
 {
    _currentType = UNDEFINED;
-   _blendMode = "set";
+   _blendMode = "replace";
    _fillShapes = true;
 }
 
@@ -30,11 +30,11 @@ void Canvas::begin(PrimitiveType type)
 void Canvas::end()
 {
    if (_currentType == POINTS) {
-      drawPoint();
+      drawPoints();
    } else if (_currentType == LINES) {
-      drawLine();
+      drawLines();
    } else if (_currentType == TRIANGLES) {
-      drawTriangle();
+      drawTriangles();
    } else if (_currentType == UNDEFINED) {
       cerr << "Undefined primitive type" << endl;
       exit(6);
@@ -73,7 +73,7 @@ void Canvas::toggleShapeFill()
    _fillShapes = !_fillShapes;
 }
 
-void Canvas::drawPoint() 
+void Canvas::drawPoints() 
 {
    if (_vertices.size() < 1) {
       cerr << "No point vertices provided" << endl;
@@ -85,7 +85,7 @@ void Canvas::drawPoint()
    }
 }
 
-void Canvas::drawLine() 
+void Canvas::drawLines() 
 {
    if (_vertices.size() < 2) {
       cerr << "Less than 2 line vertices provided" << endl;
@@ -166,7 +166,7 @@ void Canvas::drawLineHigh(const Vertex& beginVertex, const Vertex& endVertex)
    }
 }
 
-void Canvas::drawTriangle()
+void Canvas::drawTriangles()
 {
    if (_vertices.size() < 3) {
       cerr << "Less than 3 triangle vertices provided" << endl;
@@ -194,19 +194,27 @@ void Canvas::drawTriangle()
             float alpha = (float) implicitEqn(x, y, vertexB, vertexC) / fAlpha;
             float beta = (float) implicitEqn(x, y, vertexC, vertexA) / fBeta;
             float gamma = (float) implicitEqn(x, y, vertexA, vertexB) / fGamma;
-            bool colorCondition;
-            if (_fillShapes) {
-               colorCondition = (alpha >= 0 && beta  >= 0 && gamma >= 0);
-            } else {
-               colorCondition = ((alpha == 0 && beta <= 1 && gamma <= 1) || (alpha <= 1 && beta == 0 && gamma <= 1) || (alpha <= 1 && beta <= 1 && gamma == 0));
+            bool colorCondition = (alpha >= 0 && beta  >= 0 && gamma >= 0);
+            if (!_fillShapes) {
+               // pixel must be on an edge
+               float thresh = 0.02;
+               colorCondition = ((0 <= alpha && alpha <= thresh && beta >= 0 && gamma >= 0) || (alpha >= 0 && 0 <= beta && beta <= thresh && gamma >= 0) || (alpha >= 0 && beta >= 0 && 0 <= gamma && gamma <= thresh));
             }
             if (colorCondition) {
                // Avoid overlap
-               if ((alpha > 0 || fAlpha * implicitEqn(-1.1, -1.1, vertexB, vertexC) > 0) && (beta > 0 || fBeta * implicitEqn(-1.1, -1.1, vertexA, vertexC) > 0) && (gamma > 0 || fGamma * implicitEqn(-1.1, -1.1, vertexA, vertexB) > 0)) {
+               int offScreenX = -1.1, offScreenY = -1.1;
+               if ((alpha > 0 || fAlpha * implicitEqn(offScreenX, offScreenY, vertexB, vertexC) > 0) && (beta > 0 || fBeta * implicitEqn(offScreenX, offScreenY, vertexC, vertexA) > 0) && (gamma > 0 || fGamma * implicitEqn(offScreenX, offScreenY, vertexA, vertexB) > 0)) {
                   unsigned char r = vertexA.color.r * alpha + vertexB.color.r * beta + vertexC.color.r * gamma;
                   unsigned char g = vertexA.color.g * alpha + vertexB.color.g * beta + vertexC.color.g * gamma;
                   unsigned char b = vertexA.color.b * alpha + vertexB.color.b * beta + vertexC.color.b * gamma;
-                  colorPixel(x, y, {r, g, b});
+                  if (_canvas.get(y, x).r != 0 || _canvas.get(y, x).g != 0 || _canvas.get(y, x).b != 0) {
+                     cout << "OVERLAP at " << x << ", " << y << endl;
+                     // cout << "old: " << (int) _canvas.get(x, y).r << " " << (int) _canvas.get(x, y).g << " " << (int) _canvas.get(x, y).b << endl;
+                     // cout << "new: " << (int) r << " " << (int) g << " " << (int) b << endl;
+                     colorPixel(x, y, {r, g, b});
+                  } else {
+                     colorPixel(x, y, {r, g, b});
+                  }
                }
             }
          }
@@ -223,7 +231,7 @@ void Canvas::sortCounterClockwise(const vector<Vertex>::iterator& it) {
    sort(it, it + 3, [centroidX, centroidY](const Vertex& v1, const Vertex& v2) {
       float v1Angle = atan2(v1.y - centroidY, v1.x - centroidX);
       float v2Angle = atan2(v2.y - centroidY, v2.x - centroidX);
-      return v1Angle < v2Angle;
+      return v1Angle > v2Angle;
    });
 }
 
@@ -308,8 +316,10 @@ void Canvas::rose(int centerX, int centerY, int a, int n, int d)
 
 void Canvas::snowflake(int xStart, int yStart, int width, int recursionDepth) 
 {
+   cout << "Drawing snowflake starting from " << xStart << " " << yStart << " with width " << width << endl;
    this->begin(TRIANGLES);
-   snowflakeHelper(xStart, yStart, xStart + width, yStart, recursionDepth, 60);
+   snowflakeHelper(xStart, yStart, xStart + width, yStart, recursionDepth - 1, 60);
+   snowflakeHelper(xStart, yStart + 0.577 * width, xStart + width, yStart + 0.577 * width, recursionDepth - 1, 300);
    this->end();
 }
 
@@ -321,11 +331,7 @@ void Canvas::snowflakeHelper(int nextV1X, int nextV1Y, int nextV2X, int nextV2Y,
    float theta = vertex3Degrees * (M_PI / 180) + atan2(v2.y - v1.y, v2.x - v1.x);
    Vertex v3 = this->vertex(v1.x + (r * cos(theta)), v1.y + (r * sin(theta)));
 
-   // std::cout << "(" << v1.x << ", " << v1.y << ")" << endl;
-   // std::cout << "(" << v2.x << ", " << v2.y << ")" << endl;
-   // std::cout << "(" << v3.x << ", " << v3.y << ")" << "\n" << endl;
-
-   if (recursionDepth - 1 > 0) {
+   if (recursionDepth >= 0) {
       int X[3] = { v1.x, v2.x, v3.x };
       int Y[3] = { v1.y, v2.y, v3.y };
 
@@ -344,13 +350,13 @@ void Canvas::snowflakeHelper(int nextV1X, int nextV1Y, int nextV2X, int nextV2Y,
          int v7Y = nextV2Y + (Y[(i + 1) % 3] - nextV2Y) * 0.666;
 
          if (vertex3Degrees == 300) {
-            snowflakeHelper(v4X, v4Y, v5X, v5Y, recursionDepth - 2, 60);
+            snowflakeHelper(v4X, v4Y, v5X, v5Y, recursionDepth - 1, 60);
             snowflakeHelper(nextV1X, nextV1Y, nextV2X, nextV2Y, recursionDepth - 1, 60);
-            snowflakeHelper(v6X, v6Y, v7X, v7Y, recursionDepth - 2, 60);
+            snowflakeHelper(v6X, v6Y, v7X, v7Y, recursionDepth - 1, 60);
          } else {
-            snowflakeHelper(v4X, v4Y, v5X, v5Y, recursionDepth - 2, 300);
+            snowflakeHelper(v4X, v4Y, v5X, v5Y, recursionDepth - 1, 300);
             snowflakeHelper(nextV1X, nextV1Y, nextV2X, nextV2Y, recursionDepth - 1, 300);
-            snowflakeHelper(v6X, v6Y, v7X, v7Y, recursionDepth - 2, 300);
+            snowflakeHelper(v6X, v6Y, v7X, v7Y, recursionDepth - 1, 300);
          }
       }
    }
@@ -361,7 +367,7 @@ void Canvas::colorPixel(int x, int y, const Pixel& color)
    if (0 <= x && x < _canvas.width() && 0 <= y && y < _canvas.height()) {
       Pixel origPx = _canvas.get(y, x);
       Pixel newPx;
-      if (_blendMode == "set") {
+      if (_blendMode == "replace") {
          newPx = color;
       } else if (_blendMode == "add") {
          newPx = {(unsigned char) (color.r + origPx.r), (unsigned char) (color.g + origPx.g), (unsigned char) (color.b + origPx.b)};

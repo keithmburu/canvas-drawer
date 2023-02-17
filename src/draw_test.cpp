@@ -18,7 +18,7 @@ int main(int argc, char** argv)
 {
    Canvas drawer(100, 100);
 
-   // drawer.color(255, 255, 255);
+   drawer.color(255, 255, 255);
 
    // // test point primitive
    // drawer.begin(POINTS);
@@ -107,40 +107,40 @@ int main(int argc, char** argv)
    // drawer.star(50, 50, 30);
    // drawer.save("../images/test/star.png");
 
-   // // test rose
+   // test rose
+   drawer.background(0, 0, 0);
+   drawer.rose(50, 50, 30, 7, 4);
+   drawer.save("../images/test/rose.png");
+
+   // // test outlined shapes
    // drawer.background(0, 0, 0);
-   // drawer.rose(50, 50, 30, 7, 4);
-   // drawer.save("../images/test/rose.png");
+   // drawer.toggleShapeFill();
+   // drawer.begin(TRIANGLES);
+   // drawer.color(255, 0, 255);
+   // drawer.vertex(10, 10);
+   // drawer.vertex(10, 90);
+   // drawer.vertex(90, 90);
+   // drawer.color(255, 255, 0);
+   // drawer.vertex(90, 90);
+   // drawer.vertex(90, 10);
+   // drawer.vertex(10, 10);
+   // drawer.end();
+   // drawer.save("../images/test/outlined-quad.png");
 
-   // test outlined shapes
-   drawer.background(0, 0, 0);
-   drawer.toggleShapeFill();
-   drawer.begin(TRIANGLES);
-   drawer.color(255, 0, 255);
-   drawer.vertex(10, 10);
-   drawer.vertex(10, 90);
-   drawer.vertex(90, 90);
-   drawer.color(255, 255, 0);
-   drawer.vertex(90, 90);
-   drawer.vertex(90, 10);
-   drawer.vertex(10, 10);
-   drawer.end();
-   drawer.save("../images/test/outlined-quad.png");
+   // drawer.background(0, 0, 0);
+   // drawer.begin(TRIANGLES);
+   // drawer.color(255, 0, 255);
+   // drawer.vertex(10, 0);
+   // drawer.color(0, 255, 255);
+   // drawer.vertex(90, 50);
+   // drawer.color(255, 255, 0);
+   // drawer.vertex(10, 90);
+   // drawer.end();
+   // drawer.save("../images/test/outlined-triangle.png");
 
-   drawer.background(0, 0, 0);
-   drawer.begin(TRIANGLES);
-   drawer.color(255, 0, 255);
-   drawer.vertex(10, 0);
-   drawer.color(0, 255, 255);
-   drawer.vertex(90, 50);
-   drawer.color(255, 255, 0);
-   drawer.vertex(10, 90);
-   drawer.end();
-   drawer.save("../images/test/outlined-triangle.png");
-
-   drawer.background(0, 0, 0);
-   drawer.circle(50, 50, 30);
-   drawer.save("../images/test/outlined-circle.png");
+   // drawer.background(0, 0, 0);
+   // drawer.circle(50, 50, 30);
+   // drawer.save("../images/test/outlined-circle.png");
 
    // // test snowflake
    // Canvas drawer1(1000, 1000);

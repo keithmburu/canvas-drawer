@@ -90,11 +90,12 @@ void Canvas::drawLines()
    if (_vertices.size() < 2) {
       cerr << "Less than 2 line vertices provided" << endl;
       exit(2);
-   } else if (_vertices.size() % 2 != 0) {
-      cerr << "Number of line vertices isn't a multiple of 2" << endl;
-      exit(3);
    }
    for (auto it = _vertices.begin(); it < _vertices.end(); it += 2) { 
+      if (it == _vertices.end() - 1) {
+         cerr << "Number of line vertices isn't a multiple of 2" << endl;
+         break;
+      }
       Vertex beginVertex = *it;
       Vertex endVertex = *(it + 1);
       int ax = beginVertex.x, ay = beginVertex.y;
@@ -171,11 +172,12 @@ void Canvas::drawTriangles()
    if (_vertices.size() < 3) {
       cerr << "Less than 3 triangle vertices provided" << endl;
       exit(4);
-   } else if (_vertices.size() % 3 != 0) {
-      cerr << "Number of triangle vertices isn't a multiple of 3" << endl;
-      exit(5);
    }
    for (auto it = _vertices.begin(); it < _vertices.end(); it += 3) { 
+      if (it == _vertices.end() - 2) {
+         cerr << "Number of triangle vertices isn't a multiple of 3" << endl;
+         break;
+      }
       sortCounterClockwise(it);
       Vertex vertexA = *it;
       Vertex vertexB = *(it + 1);
@@ -197,24 +199,17 @@ void Canvas::drawTriangles()
             bool colorCondition = (alpha >= 0 && beta  >= 0 && gamma >= 0);
             if (!_fillShapes) {
                // pixel must be on an edge
-               float thresh = 0.02;
+               float thresh = 0.015;
                colorCondition = ((0 <= alpha && alpha <= thresh && beta >= 0 && gamma >= 0) || (alpha >= 0 && 0 <= beta && beta <= thresh && gamma >= 0) || (alpha >= 0 && beta >= 0 && 0 <= gamma && gamma <= thresh));
             }
             if (colorCondition) {
                // Avoid overlap
-               int offScreenX = -1.1, offScreenY = -1.1;
+               int offScreenX = -1, offScreenY = -2.1;
                if ((alpha > 0 || fAlpha * implicitEqn(offScreenX, offScreenY, vertexB, vertexC) > 0) && (beta > 0 || fBeta * implicitEqn(offScreenX, offScreenY, vertexC, vertexA) > 0) && (gamma > 0 || fGamma * implicitEqn(offScreenX, offScreenY, vertexA, vertexB) > 0)) {
                   unsigned char r = vertexA.color.r * alpha + vertexB.color.r * beta + vertexC.color.r * gamma;
                   unsigned char g = vertexA.color.g * alpha + vertexB.color.g * beta + vertexC.color.g * gamma;
                   unsigned char b = vertexA.color.b * alpha + vertexB.color.b * beta + vertexC.color.b * gamma;
-                  if (_canvas.get(y, x).r != 0 || _canvas.get(y, x).g != 0 || _canvas.get(y, x).b != 0) {
-                     cout << "OVERLAP at " << x << ", " << y << endl;
-                     // cout << "old: " << (int) _canvas.get(x, y).r << " " << (int) _canvas.get(x, y).g << " " << (int) _canvas.get(x, y).b << endl;
-                     // cout << "new: " << (int) r << " " << (int) g << " " << (int) b << endl;
-                     colorPixel(x, y, {r, g, b});
-                  } else {
-                     colorPixel(x, y, {r, g, b});
-                  }
+                  colorPixel(x, y, {r, g, b});
                }
             }
          }
@@ -301,7 +296,7 @@ void Canvas::star(int centerX, int centerY, int radius)
 void Canvas::rose(int centerX, int centerY, int a, int n, int d) 
 {
    cout << "Drawing rose with center " << centerX << " " << centerY << ", a = " << a << " and k = " << n << " / " << d << endl;
-   this->begin(POINTS);
+   this->begin(LINES);
    float r;
    float k = (float) n / d;
    int x, y;

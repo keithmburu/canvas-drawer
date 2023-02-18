@@ -47,10 +47,13 @@ namespace agl
 
       // Change how newly drawn pixel colors mix with existing pixel colors
       // blend modes are "replace", "add", "difference", and "average"
-      void changeBlendMode(const std::string& newBlendMode);
+      void setBlendMode(const std::string& newBlendMode);
 
       // Enable or disable shape outlining
       void toggleShapeFill();
+
+      // Increase or decrease number of pixels colored
+      void setLineWidth(int newLineWidth);
 
       // Color the pixels corresponding to one specified vertex each
       void drawPoints();
@@ -113,6 +116,7 @@ namespace agl
       std::vector<Vertex> _vertices;
       std::string _currentBlendMode;
       bool _fillShapes;
+      int _lineWidth;
    };
 }
 

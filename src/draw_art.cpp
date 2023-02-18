@@ -25,8 +25,10 @@ int main(int argc, char** argv)
       drawer.star(0.1 * i * WIDTH, 0.9 * HEIGHT, 0.05 * HEIGHT);
    }
    drawer.color(255, 0, 255);
+   drawer.setLineWidth(2);
    drawer.rose(WIDTH / 2, HEIGHT / 2, HEIGHT / 4, 7, 4);
    drawer.save("../images/art/art-1.png");
+   drawer.setLineWidth(1);
 
 
    //--------------------------- ART 2 ---------------------------
@@ -36,7 +38,11 @@ int main(int argc, char** argv)
    drawer.circle(WIDTH / 4, HEIGHT / 2, HEIGHT / 3);
    drawer.circle(WIDTH / 2, HEIGHT / 2, HEIGHT / 3);
    drawer.circle(3 * WIDTH / 4, HEIGHT / 2, HEIGHT / 3);
-   drawer.color(50, 0, 50);
+   drawer.color(64, 0, 64);
+   drawer.circle(WIDTH / 4, HEIGHT / 2, HEIGHT / 12);
+   drawer.circle(WIDTH / 2, HEIGHT / 2, HEIGHT / 12);
+   drawer.circle(3 * WIDTH / 4, HEIGHT / 2, HEIGHT / 12);
+   drawer.color(128, 0, 128);
    int x;
    int y = 0.5 * HEIGHT;
    for (int n = 1; n <= 7; n++) {
@@ -88,7 +94,7 @@ int main(int argc, char** argv)
 
    //--------------------------- ART 5 ---------------------------
    drawer.background(0, 0, 0);
-   drawer.changeBlendMode("average");
+   drawer.setBlendMode("average");
    for (int i = 1; i <= 100; i++) {
       drawer.color(rand() % 256, rand() % 256, rand() % 256);
       if (i % 2 == 0) {
@@ -106,14 +112,14 @@ int main(int argc, char** argv)
       }
    }
    drawer.save("../images/art/art-5.png");
-   drawer.changeBlendMode("replace");
+   drawer.setBlendMode("replace");
 
 
 
    //--------------------------- ART 6 ---------------------------
    drawer.background(0, 0, 0);
    drawer.color(255, 255, 255);
-   drawer.changeBlendMode("average");
+   drawer.setBlendMode("average");
    int xStart, yStart, width;
    for (int i = 1; i <= 300; i++) {
       if (i % 5 <= 3) {
@@ -130,6 +136,6 @@ int main(int argc, char** argv)
       }
    }
    drawer.save("../images/art/art-6.png");
-   drawer.changeBlendMode("replace");
+   drawer.setBlendMode("replace");
 }
 

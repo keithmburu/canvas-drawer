@@ -154,15 +154,43 @@ int main(int argc, char** argv)
    drawer1.save("../images/test/snowflake-2.png");
    drawer1.snowflake(150, 300, 700, 4);
    drawer1.save("../images/test/snowflake-4.png");
-
    // drawer1.toggleShapeFill();
-
 
    // test maurer rose
    drawer1.background(0, 0, 0);
    drawer1.color(200, 110, 0);
    drawer1.maurerRose(500, 500, 400, 3, 47);
    drawer1.save("../images/test/maurer-rose.png");
+
+   // test line width
+   drawer.background(0, 0, 0);
+   drawer.color(255, 255, 255);
+   drawer.begin(LINES);
+   drawer.vertex(0, 10);
+   drawer.vertex(100, 10);
+   drawer.end();
+   drawer.begin(LINES);
+   drawer.setLineWidth(2);
+   drawer.vertex(0, 30);
+   drawer.vertex(100, 30);
+   drawer.end();
+   drawer.begin(LINES);
+   drawer.setLineWidth(3);
+   drawer.vertex(0, 50);
+   drawer.vertex(100, 50);
+   drawer.end();
+   drawer.begin(LINES);
+   drawer.setLineWidth(4);
+   drawer.vertex(0, 70);
+   drawer.vertex(100, 70);
+   drawer.end();
+   drawer.begin(LINES);
+   drawer.setLineWidth(5);
+   drawer.vertex(0, 90);
+   drawer.vertex(100, 90);
+   drawer.end();
+   drawer.save("../images/test/line-width.png");
+   drawer.setLineWidth(2);
    
    return 0;
 }

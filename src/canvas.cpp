@@ -11,6 +11,7 @@ Canvas::Canvas(int w, int h) : _canvas(w, h)
    _currentType = UNDEFINED;
    _currentBlendMode = "replace";
    _fillShapes = true;
+   _lineWidth = 1;
 }
 
 Canvas::~Canvas()
@@ -63,7 +64,7 @@ void Canvas::background(unsigned char r, unsigned char g, unsigned char b)
    }
 }
 
-void Canvas::changeBlendMode(const string& newBlendMode) 
+void Canvas::setBlendMode(const string& newBlendMode) 
 {
    _currentBlendMode = newBlendMode;
 }
@@ -71,6 +72,11 @@ void Canvas::changeBlendMode(const string& newBlendMode)
 void Canvas::toggleShapeFill() 
 {
    _fillShapes = !_fillShapes;
+}
+
+void Canvas::setLineWidth(int newLineWidth)
+{
+   _lineWidth = newLineWidth;
 }
 
 void Canvas::drawPoints() 
@@ -382,7 +388,7 @@ void Canvas::snowflakeHelper(int nextV1X, int nextV1Y, int nextV2X, int nextV2Y,
 
 void Canvas::colorPixel(int x, int y, const Pixel& color) 
 {
-   if (0 <= x && x < _canvas.width() && 0 <= y && y < _canvas.height()) {
+   if (0 <= x && x < _canvas.width() - _lineWidth && 0 <= y && y < _canvas.height() - _lineWidth) {
       Pixel origPx = _canvas.get(y, x);
       Pixel newPx;
       if (_currentBlendMode == "replace") {
@@ -394,7 +400,11 @@ void Canvas::colorPixel(int x, int y, const Pixel& color)
       } else if (_currentBlendMode == "average") {
          newPx = {(unsigned char) (0.5 * color.r + 0.5 * origPx.r), (unsigned char) (0.5 * color.g + 0.5 * origPx.g), (unsigned char) (0.5 * color.b + 0.5 * origPx.b)};
       }   
-      _canvas.set(y, x, newPx);
+      for (int i = 0; i < _lineWidth; i++) {
+         for (int j = 0; j < _lineWidth; j++) {
+            _canvas.set(y + i, x + j, newPx);
+         }
+      }
    }
 }
 

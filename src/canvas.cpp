@@ -12,6 +12,8 @@ Canvas::Canvas(int w, int h) : _canvas(w, h)
    _currentBlendMode = "replace";
    _fillShapes = true;
    _lineWidth = 1;
+   _circleOutline = false;
+   _rectangleOutline = false;
 }
 
 Canvas::~Canvas()
@@ -184,7 +186,9 @@ void Canvas::drawTriangles()
          cerr << "Number of triangle vertices isn't a multiple of 3" << endl;
          break;
       }
-      sortCounterClockwise(it);
+      if (!_circleOutline && !_rectangleOutline) {
+         sortCounterClockwise(it);
+      }
       Vertex vertexA = *it;
       Vertex vertexB = *(it + 1);
       Vertex vertexC = *(it + 2);
@@ -202,11 +206,17 @@ void Canvas::drawTriangles()
             float alpha = (float) implicitEqn(x, y, vertexB, vertexC) / fAlpha;
             float beta = (float) implicitEqn(x, y, vertexC, vertexA) / fBeta;
             float gamma = (float) implicitEqn(x, y, vertexA, vertexB) / fGamma;
-            bool colorCondition = (alpha >= 0 && beta  >= 0 && gamma >= 0);
+            bool colorCondition = (alpha >= 0 && beta >= 0 && gamma >= 0);
             if (!_fillShapes) {
                // pixel must be on an edge
-               float thresh = 0.015;
-               colorCondition = ((0 <= alpha && alpha <= thresh && beta >= 0 && gamma >= 0) || (alpha >= 0 && 0 <= beta && beta <= thresh && gamma >= 0) || (alpha >= 0 && beta >= 0 && 0 <= gamma && gamma <= thresh));
+               float thresh = _lineWidth / 20.0f;
+               if (_circleOutline) { // only draw triangle side opposite origin
+                  colorCondition = ((0 <= alpha && alpha <= thresh && beta >= 0 && gamma >= 0));
+               } else if (_rectangleOutline) { // don't draw triangle hypotenuse
+                  colorCondition = ((0 <= alpha && alpha <= thresh && beta >= 0 && gamma >= 0) || (alpha >= 0 && beta >= 0 && 0 <= gamma && gamma <= thresh));
+               } else {
+                  colorCondition = ((0 <= alpha && alpha <= thresh && beta >= 0 && gamma >= 0) || (alpha >= 0 && 0 <= beta && beta <= thresh && gamma >= 0) || (alpha >= 0 && beta >= 0 && 0 <= gamma && gamma <= thresh));
+               }
             }
             if (colorCondition) {
                // Avoid overlap
@@ -236,23 +246,26 @@ void Canvas::sortCounterClockwise(const vector<Vertex>::iterator& it) {
    });
 }
 
-void Canvas::rectangle(int xLeft, int xRight, int yBottom, int yTop)
+void Canvas::rectangle(int xLeft, int yBottom, int xRight, int yTop)
 {
    cout << "Drawing rectangle from " << xLeft << " " << yBottom << " to " << xRight << " " << yTop << endl;
+   _rectangleOutline = !_fillShapes;
    this->begin(TRIANGLES);
    this->vertex(xLeft, yBottom);
    this->vertex(xLeft, yTop);
    this->vertex(xRight, yTop);
 
-   this->vertex(xRight, yBottom);
    this->vertex(xRight, yTop);
+   this->vertex(xRight, yBottom);
    this->vertex(xLeft, yBottom);
    this->end();
+   _rectangleOutline = false;
 }
 
 void Canvas::circle(int centerX, int centerY, int radius)
 {
    cout << "Drawing circle with center " << centerX << " " << centerY << " and radius " << radius << endl;
+   _circleOutline = !_fillShapes;
    if (radius == 0) {
       this->begin(POINTS);
       this->vertex(centerX, centerY);
@@ -274,6 +287,7 @@ void Canvas::circle(int centerX, int centerY, int radius)
          this->vertex(secondX, secondY);
       }
       this->end();
+      _circleOutline = false;
    }
 }
 
@@ -341,10 +355,12 @@ void Canvas::maurerRose(int centerX, int centerY, int a, int n, int d)
 void Canvas::snowflake(int xStart, int yStart, int width, int recursionDepth) 
 {
    cout << "Drawing snowflake starting from " << xStart << " " << yStart << " with width " << width << endl;
+   _snowflakeOutline = !_fillShapes;
    this->begin(TRIANGLES);
    snowflakeHelper(xStart, yStart, xStart + width, yStart, recursionDepth - 1, 60);
    snowflakeHelper(xStart, yStart + 0.577 * width, xStart + width, yStart + 0.577 * width, recursionDepth - 1, 300);
    this->end();
+   _snowflakeOutline = false;
 }
 
 void Canvas::snowflakeHelper(int nextV1X, int nextV1Y, int nextV2X, int nextV2Y, int recursionDepth, int vertex3Degrees) 
@@ -388,7 +404,7 @@ void Canvas::snowflakeHelper(int nextV1X, int nextV1Y, int nextV2X, int nextV2Y,
 
 void Canvas::colorPixel(int x, int y, const Pixel& color) 
 {
-   if (0 <= x && x < _canvas.width() - _lineWidth && 0 <= y && y < _canvas.height() - _lineWidth) {
+   if (0 <= x && x <= _canvas.width() - _lineWidth && 0 <= y && y <= _canvas.height() - _lineWidth) {
       Pixel origPx = _canvas.get(y, x);
       Pixel newPx;
       if (_currentBlendMode == "replace") {
@@ -421,8 +437,8 @@ void Canvas::gradient(const Pixel& a, const Pixel& b, const string& orientation,
    _canvas.set(gradientImg.width(), gradientImg.height(), gradientImg.data());
 }
 
-float Canvas::noise(float t)
+void Canvas::glow() 
 {
-   float v = sin(t) * 1175.5453123;
-   return v - int(v);
+   Image glowImg = _canvas.glow();
+   _canvas.set(glowImg.width(), glowImg.height(), glowImg.data());
 }

@@ -107,7 +107,8 @@ namespace agl
       // Apply a vertical or horizontal gradient to the canvas with two colors
       void gradient(const Pixel& a, const Pixel& b, const std::string& orientation, float alpha);
 
-      float noise(float t);
+      // Apply glowing texture to image
+      void glow();
 
    private:
       Image _canvas;
@@ -117,6 +118,9 @@ namespace agl
       std::string _currentBlendMode;
       bool _fillShapes;
       int _lineWidth;
+      bool _circleOutline;
+      bool _rectangleOutline;
+      bool _snowflakeOutline;
    };
 }
 

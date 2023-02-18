@@ -82,19 +82,9 @@ int main(int argc, char** argv)
    drawer.end();
    drawer.save("../images/test/two-lines.png");
 
-   // test gradient
-   drawer.background(255, 255, 255);
-   drawer.gradient({0, 255, 0}, {0, 64, 0}, "vertical", 1);
-   drawer.color(255, 255, 255);
-   drawer.begin(LINES);
-   drawer.vertex(0, 0);
-   drawer.vertex(99, 99);
-   drawer.end();
-   drawer.save("../images/test/vertical-gradient.png");
-
    // test rectangle
    drawer.background(0, 0, 0);
-   drawer.rectangle(10, 90, 30, 70);
+   drawer.rectangle(10, 30, 90, 70);
    drawer.save("../images/test/rectangle.png");
 
    // test circle
@@ -112,55 +102,56 @@ int main(int argc, char** argv)
    drawer.rose(50, 50, 30, 7, 4);
    drawer.save("../images/test/rose.png");
 
-   // test outlined shapes
-   drawer.background(0, 0, 0);
-   drawer.toggleShapeFill();
-   drawer.begin(TRIANGLES);
-   drawer.color(255, 0, 255);
-   drawer.vertex(10, 10);
-   drawer.vertex(10, 90);
-   drawer.vertex(90, 90);
-   drawer.color(255, 255, 0);
-   drawer.vertex(90, 90);
-   drawer.vertex(90, 10);
-   drawer.vertex(10, 10);
-   drawer.end();
-   drawer.save("../images/test/outlined-quad.png");
-
-   drawer.background(0, 0, 0);
-   drawer.begin(TRIANGLES);
-   drawer.color(255, 0, 255);
-   drawer.vertex(10, 0);
-   drawer.color(0, 255, 255);
-   drawer.vertex(90, 50);
-   drawer.color(255, 255, 0);
-   drawer.vertex(10, 90);
-   drawer.end();
-   drawer.save("../images/test/outlined-triangle.png");
-
-   drawer.background(0, 0, 0);
-   drawer.circle(50, 50, 30);
-   drawer.save("../images/test/outlined-circle.png");
-
    Canvas drawer1(1000, 1000);
    drawer1.background(0, 0, 0);
    drawer1.color(255, 255, 255);
 
    // test snowflake
-   // drawer1.toggleShapeFill();
    drawer1.snowflake(150, 300, 700, 1);
    drawer1.save("../images/test/snowflake-1.png");
    drawer1.snowflake(150, 300, 700, 2);
    drawer1.save("../images/test/snowflake-2.png");
    drawer1.snowflake(150, 300, 700, 4);
    drawer1.save("../images/test/snowflake-4.png");
-   // drawer1.toggleShapeFill();
 
    // test maurer rose
    drawer1.background(0, 0, 0);
    drawer1.color(200, 110, 0);
    drawer1.maurerRose(500, 500, 400, 3, 47);
    drawer1.save("../images/test/maurer-rose.png");
+   drawer1.color(255, 255, 255);
+
+   // test blend modes
+   drawer.background(0, 0, 0);
+   drawer.color(255, 0, 0);
+   drawer.rectangle(10, 10, 90, 90);
+   drawer.setBlendMode("add");
+   drawer.color(0, 255, 0);
+   drawer.circle(50, 50, 30);
+   drawer.setBlendMode("difference");
+   drawer.begin(TRIANGLES);
+   drawer.color(255, 0, 255);
+   drawer.vertex(20, 20);
+   drawer.color(0, 255, 255);
+   drawer.vertex(80, 50);
+   drawer.color(255, 255, 0);
+   drawer.vertex(20, 80);
+   drawer.end();
+   drawer.setBlendMode("average");
+   drawer.color(150, 100, 0);
+   drawer.star(50, 50, 10);
+   drawer.setBlendMode("replace");
+   drawer.save("../images/test/blend-modes.png");
+
+   // test gradient
+   drawer.background(255, 255, 255);
+   drawer.gradient({0, 255, 0}, {0, 64, 0}, "vertical", 1);
+   drawer.color(255, 255, 255);
+   drawer.begin(LINES);
+   drawer.vertex(0, 0);
+   drawer.vertex(99, 99);
+   drawer.end();
+   drawer.save("../images/test/vertical-gradient.png");
 
    // test line width
    drawer.background(0, 0, 0);
@@ -190,7 +181,57 @@ int main(int argc, char** argv)
    drawer.vertex(100, 90);
    drawer.end();
    drawer.save("../images/test/line-width.png");
-   drawer.setLineWidth(2);
+   drawer.setLineWidth(1);
+
+   // test outlined shapes
+   drawer.toggleShapeFill();
+
+   drawer.background(0, 0, 0);
+   drawer.begin(TRIANGLES);
+   drawer.color(255, 0, 255);
+   drawer.vertex(10, 10);
+   drawer.vertex(10, 90);
+   drawer.vertex(90, 90);
+   drawer.color(255, 255, 0);
+   drawer.vertex(90, 90);
+   drawer.vertex(90, 10);
+   drawer.vertex(10, 10);
+   drawer.end();
+   drawer.save("../images/test/outlined-quad.png");
+
+   drawer.background(0, 0, 0);
+   drawer.begin(TRIANGLES);
+   drawer.color(255, 0, 255);
+   drawer.vertex(10, 0);
+   drawer.color(0, 255, 255);
+   drawer.vertex(90, 50);
+   drawer.color(255, 255, 0);
+   drawer.vertex(10, 90);
+   drawer.end();
+   drawer.save("../images/test/outlined-triangle.png");
+
+   drawer.color(255, 255, 255); 
+
+   drawer.background(0, 0, 0);
+   drawer.rectangle(10, 30, 90, 70);
+   drawer.save("../images/test/outlined-rectangle.png");
+
+   drawer.background(0, 0, 0);
+   drawer.circle(50, 50, 30);
+   drawer.save("../images/test/outlined-circle.png");
+
+   drawer.background(0, 0, 0);
+   drawer.star(50, 50, 30);
+   drawer.save("../images/test/outlined-star.png");
+
+   drawer.toggleShapeFill();
+
+   drawer1.toggleShapeFill();
+   drawer1.background(0, 0, 0);
+   drawer1.snowflake(150, 300, 700, 4);
+   drawer1.save("../images/test/outlined-snowflake-4.png");
+   drawer1.toggleShapeFill();
+   
    
    return 0;
 }

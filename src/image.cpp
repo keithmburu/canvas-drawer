@@ -545,9 +545,7 @@ Image Image::glow() const {
       }
       white.set(idx, {255, 255, 255});
    }
-   extractedWhite.save("../demo/white-extractedWhite.png");
    Image whiteBlurred = extractedWhite.blurGaussian();
-   whiteBlurred.save("../demo/white-blur.png");
    for (int idx = 0; idx < result.width() * result.height(); idx++) {
       Pixel alphaPx = whiteBlurred.get(idx);
       unsigned char c = alphaPx.r * 0.3f + alphaPx.g * 0.59f + alphaPx.b * 0.11f;

@@ -27,6 +27,7 @@ int main(int argc, char** argv)
    drawer.color(255, 0, 255);
    drawer.setLineWidth(2);
    drawer.rose(WIDTH / 2, HEIGHT / 2, HEIGHT / 4, 7, 4);
+   drawer.glow();
    drawer.save("../images/art/art-1.png");
    drawer.setLineWidth(1);
 
@@ -50,6 +51,7 @@ int main(int argc, char** argv)
       x = ((float) n / 8) * WIDTH;
       drawer.rose(x, y, 20, n, d);
    }
+   drawer.glow();
    drawer.save("../images/art/art-2.png");
 
 
@@ -66,6 +68,7 @@ int main(int argc, char** argv)
       d = rand() % 100;
       drawer.maurerRose(centerX, centerY, a, n, d);
    }
+   drawer.glow();
    drawer.save("../images/art/art-3.png");
 
 
@@ -75,11 +78,17 @@ int main(int argc, char** argv)
    int xLeft, yBottom, xRight, yTop, radius;
    for (int i = 1; i <= 100; i++) {
       drawer.color(rand() % 256, rand() % 256, rand() % 256);
+      if (i % 3 == 0) {
+         drawer.toggleShapeFill();
+      }
       if (i % 2 == 0) {
          xLeft = rand() % WIDTH;
          yBottom = rand() % HEIGHT;
          xRight = xLeft + rand() % (WIDTH - xLeft);
          yTop = yBottom + rand() % (HEIGHT - yBottom);
+         if (i % 3 == 0) {
+            drawer.toggleShapeFill();
+         }
          drawer.rectangle(xLeft, yBottom, xRight, yTop);
       } else {
          centerX = rand() % WIDTH;
@@ -87,7 +96,11 @@ int main(int argc, char** argv)
          radius = rand() % (min({centerX, WIDTH - centerX, centerY, HEIGHT - centerY}) + 1);
          drawer.circle(centerX, centerY, radius);
       }
+      if (i % 3 == 0) {
+         drawer.toggleShapeFill();
+      }
    }
+   drawer.glow();
    drawer.save("../images/art/art-4.png");
 
 
@@ -95,13 +108,19 @@ int main(int argc, char** argv)
    //--------------------------- ART 5 ---------------------------
    drawer.background(0, 0, 0);
    drawer.setBlendMode("average");
-   for (int i = 1; i <= 100; i++) {
+   for (int i = 1; i <= 50; i++) {
       drawer.color(rand() % 256, rand() % 256, rand() % 256);
       if (i % 2 == 0) {
          centerX = rand() % WIDTH;
          centerY = rand() % HEIGHT;
          radius = rand() % (min({centerX, WIDTH - centerX, centerY, HEIGHT - centerY}) + 1);
+         if (i % 3 == 0) {
+            drawer.toggleShapeFill();
+         }
          drawer.star(centerX, centerY, radius);
+         if (i % 3 == 0) {
+            drawer.toggleShapeFill();
+         }
       } else {
          centerX = rand() % WIDTH;
          centerY = rand() % HEIGHT;
@@ -111,6 +130,7 @@ int main(int argc, char** argv)
          drawer.rose(centerX, centerY, a, n, d);
       }
    }
+   drawer.glow();
    drawer.save("../images/art/art-5.png");
    drawer.setBlendMode("replace");
 
@@ -118,8 +138,7 @@ int main(int argc, char** argv)
 
    //--------------------------- ART 6 ---------------------------
    drawer.background(0, 0, 0);
-   drawer.color(255, 255, 255);
-   drawer.setBlendMode("average");
+   drawer.color(200, 200, 200);
    int xStart, yStart, width;
    for (int i = 1; i <= 300; i++) {
       if (i % 5 <= 3) {
@@ -136,6 +155,5 @@ int main(int argc, char** argv)
       }
    }
    drawer.save("../images/art/art-6.png");
-   drawer.setBlendMode("replace");
 }
 

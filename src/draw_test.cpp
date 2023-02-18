@@ -229,7 +229,7 @@ int main(int argc, char** argv)
    drawer1.toggleShapeFill();
    drawer1.background(0, 0, 0);
    drawer1.snowflake(150, 300, 700, 4);
-   drawer1.save("../images/test/outlined-snowflake-4.png");
+   drawer1.save("../images/test/outlined-snowflake.png");
    drawer1.toggleShapeFill();
    
    

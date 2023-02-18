@@ -356,7 +356,7 @@ void Canvas::snowflake(int xStart, int yStart, int width, int recursionDepth)
 {
    cout << "Drawing snowflake starting from " << xStart << " " << yStart << " with width " << width << endl;
    _snowflakeOutline = !_fillShapes;
-   this->begin(TRIANGLES);
+   _snowflakeOutline? this->begin(POINTS) : this->begin(TRIANGLES);
    snowflakeHelper(xStart, yStart, xStart + width, yStart, recursionDepth - 1, 60);
    snowflakeHelper(xStart, yStart + 0.577 * width, xStart + width, yStart + 0.577 * width, recursionDepth - 1, 300);
    this->end();

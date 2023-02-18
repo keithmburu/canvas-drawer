@@ -9,7 +9,7 @@ using namespace agl;
 Canvas::Canvas(int w, int h) : _canvas(w, h)
 {
    _currentType = UNDEFINED;
-   _blendMode = "replace";
+   _currentBlendMode = "replace";
    _fillShapes = true;
 }
 
@@ -65,7 +65,7 @@ void Canvas::background(unsigned char r, unsigned char g, unsigned char b)
 
 void Canvas::changeBlendMode(const string& newBlendMode) 
 {
-   _blendMode = newBlendMode;
+   _currentBlendMode = newBlendMode;
 }
 
 void Canvas::toggleShapeFill() 
@@ -295,8 +295,8 @@ void Canvas::star(int centerX, int centerY, int radius)
 
 void Canvas::rose(int centerX, int centerY, int a, int n, int d) 
 {
-   cout << "Drawing rose with center " << centerX << " " << centerY << ", a = " << a << " and k = " << n << " / " << d << endl;
-   this->begin(LINES);
+   cout << "Drawing rose with center " << centerX << " " << centerY << ", a = " << a << ", k = " << n << " / " << d << endl;
+   this->begin(POINTS);
    float r;
    float k = (float) n / d;
    int x, y;
@@ -304,6 +304,29 @@ void Canvas::rose(int centerX, int centerY, int a, int n, int d)
       r = a * cos(k * theta);
       x = r * cos(theta) + centerX;
       y = r * sin(theta) + centerY;
+      this->vertex(x, y);
+   }
+   this->end();
+}
+
+void Canvas::maurerRose(int centerX, int centerY, int a, int n, int d) 
+{
+   cout << "Drawing maurer rose with center " << centerX << " " << centerY << ", a = " << a << " n = " << n << ", d = " << d << endl;
+   this->begin(LINES);
+   float r;
+   int x, y;
+   // draw rose outline
+   for (float theta = 0; theta < 2 * M_PI; theta += 0.017) {
+      r = a * cos(n * theta);
+      x = r * cos(theta) + centerX;
+      y = r * sin(theta) + centerY;
+      this->vertex(x, y);
+   }
+   // draw lines connecting vertex pairs
+   for (float theta = 0; theta < 2 * M_PI; theta += 0.017) {
+      r = a * cos(n * theta * d);
+      x = r * cos(theta * d) + centerX;
+      y = r * sin(theta * d) + centerY;
       this->vertex(x, y);
    }
    this->end();
@@ -362,13 +385,13 @@ void Canvas::colorPixel(int x, int y, const Pixel& color)
    if (0 <= x && x < _canvas.width() && 0 <= y && y < _canvas.height()) {
       Pixel origPx = _canvas.get(y, x);
       Pixel newPx;
-      if (_blendMode == "replace") {
+      if (_currentBlendMode == "replace") {
          newPx = color;
-      } else if (_blendMode == "add") {
+      } else if (_currentBlendMode == "add") {
          newPx = {(unsigned char) (color.r + origPx.r), (unsigned char) (color.g + origPx.g), (unsigned char) (color.b + origPx.b)};
-      } else if (_blendMode == "difference") {
+      } else if (_currentBlendMode == "difference") {
          newPx = {(unsigned char) abs(color.r - origPx.r), (unsigned char) abs(color.g - origPx.g), (unsigned char) abs(color.b - origPx.b)};
-      } else if (_blendMode == "average") {
+      } else if (_currentBlendMode == "average") {
          newPx = {(unsigned char) (0.5 * color.r + 0.5 * origPx.r), (unsigned char) (0.5 * color.g + 0.5 * origPx.g), (unsigned char) (0.5 * color.b + 0.5 * origPx.b)};
       }   
       _canvas.set(y, x, newPx);
@@ -386,4 +409,10 @@ void Canvas::gradient(const Pixel& a, const Pixel& b, const string& orientation,
 {
    Image gradientImg = _canvas.gradient(a, b, orientation, alpha);
    _canvas.set(gradientImg.width(), gradientImg.height(), gradientImg.data());
+}
+
+float Canvas::noise(float t)
+{
+   float v = sin(t) * 1175.5453123;
+   return v - int(v);
 }

@@ -80,8 +80,12 @@ namespace agl
       void star(int centerX, int centerY, int radius);
 
       // Draw rose sinusoid using cosine function
-      // a determines the size, 1 <= n <= 7 and 1 <= d <= 9 determine the shape
+      // a determines the size, n and d determine the shape
       void rose(int centerX, int centerY, int a, int n, int d);
+
+      // Draw lines that connect points on rose curve and trace the shape of the curve
+      // a determines the size, n and d determine the shape
+      void maurerRose(int centerX, int centerY, int a, int n, int d);
 
       // Draw Koch snowflake with its base at xStart, yStart
       // Size determined by width and complexity determined by recursionDepth
@@ -100,12 +104,14 @@ namespace agl
       // Apply a vertical or horizontal gradient to the canvas with two colors
       void gradient(const Pixel& a, const Pixel& b, const std::string& orientation, float alpha);
 
+      float noise(float t);
+
    private:
       Image _canvas;
       PrimitiveType _currentType;
       Pixel _currentColor;
       std::vector<Vertex> _vertices;
-      std::string _blendMode;
+      std::string _currentBlendMode;
       bool _fillShapes;
    };
 }

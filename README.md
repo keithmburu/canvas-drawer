@@ -2,7 +2,7 @@
 
 Implements a simple drawing api
 
-![](images/art/art-3.png)\
+<img src="images/art/art-3.png" width="640">
 
 ## How to build
 
@@ -46,31 +46,31 @@ canvas-drawer/build $ ../bin/draw_art
 ## Supported primitives
 
 1. Point\
-![](images/test/point.png)\
+<img src="images/test/point.png" width="400">
 2. Line\
-![](images/test/line-color-interpolation.png)\
+<img src="images/test/line-color-interpolation.png" width="400">
 3. Triangle\
-![](images/test/triangle.png)\
+<img src="images/test/triangle.png" width="400">
 
 ## Composite shapes
 
 1. Circle\
-![](images/test/circle.png)\
+<img src="images/test/circle.png" width="400">
 2. Rectangle\
-![](images/test/rectangle.png)\
+<img src="images/test/rectangle.png" width="400">
 3. Star\
-![](images/test/star.png)\
+<img src="images/test/star.png" width="400">
 4. Snowflake\
-![](images/test/snowflake-4.png)\
+<img src="images/test/snowflake-4.png" width="400">
 5. Rose\
-![](images/test/rose.png)\
+<img src="images/test/rose.png" width="400">
 
 ## Results
 
-![](images/art/art-1.png)\
-![](images/art/art-2.png)\
-![](images/art/art-4.png)\
-![](images/art/art-5.png)\
-![](images/art/art-6.png)\
-![](images/art/art-7.png)\
+<img src="images/art/art-1.png" width="640">
+<img src="images/art/art-2.png" width="640">
+<img src="images/art/art-4.png" width="640">
+<img src="images/art/art-5.png" width="640">
+<img src="images/art/art-6.png" width="640">
+<img src="images/art/art-7.png" width="640">
 

@@ -116,10 +116,8 @@ int main(int argc, char** argv)
 
    // test maurer rose
    drawer1.background(0, 0, 0);
-   drawer1.color(200, 110, 0);
    drawer1.maurerRose(500, 500, 400, 3, 47);
    drawer1.save("../images/test/maurer-rose.png");
-   drawer1.color(255, 255, 255);
 
    // test blend modes
    drawer.background(0, 0, 0);

@@ -237,8 +237,8 @@ void Canvas::sortCounterClockwise(const vector<Vertex>::iterator& it) {
    Vertex vertexA = *it;
    Vertex vertexB = *(it + 1);
    Vertex vertexC = *(it + 2);
-   float centroidX = (float) (vertexA.x + vertexB.x + vertexC.x) / 3;
-   float centroidY = (float) (vertexA.y + vertexB.y + vertexC.y) / 3;
+   float centroidX = (vertexA.x + vertexB.x + vertexC.x) / 3.0f;
+   float centroidY = (vertexA.y + vertexB.y + vertexC.y) / 3.0f;
    sort(it, it + 3, [centroidX, centroidY](const Vertex& v1, const Vertex& v2) {
       float v1Angle = atan2(v1.y - centroidY, v1.x - centroidX);
       float v2Angle = atan2(v2.y - centroidY, v2.x - centroidX);
@@ -250,15 +250,15 @@ void Canvas::rectangle(int xLeft, int yBottom, int xRight, int yTop)
 {
    cout << "Drawing rectangle from " << xLeft << " " << yBottom << " to " << xRight << " " << yTop << endl;
    _rectangleOutline = !_fillShapes;
-   this->begin(TRIANGLES);
-   this->vertex(xLeft, yBottom);
-   this->vertex(xLeft, yTop);
-   this->vertex(xRight, yTop);
+   begin(TRIANGLES);
+   vertex(xLeft, yBottom);
+   vertex(xLeft, yTop);
+   vertex(xRight, yTop);
 
-   this->vertex(xRight, yTop);
-   this->vertex(xRight, yBottom);
-   this->vertex(xLeft, yBottom);
-   this->end();
+   vertex(xRight, yTop);
+   vertex(xRight, yBottom);
+   vertex(xLeft, yBottom);
+   end();
    _rectangleOutline = false;
 }
 
@@ -267,14 +267,14 @@ void Canvas::circle(int centerX, int centerY, int radius)
    cout << "Drawing circle with center " << centerX << " " << centerY << " and radius " << radius << endl;
    _circleOutline = !_fillShapes;
    if (radius == 0) {
-      this->begin(POINTS);
-      this->vertex(centerX, centerY);
-      this->end();
+      begin(POINTS);
+      vertex(centerX, centerY);
+      end();
    } else {
-      this->begin(TRIANGLES);
+      begin(TRIANGLES);
       int NUM_TRIANGLES = 32;
       float theta = 0;
-      float dTheta = (float) (2 * M_PI) / NUM_TRIANGLES;
+      float dTheta = (2.0f * M_PI) / NUM_TRIANGLES;
       int firstX, firstY, secondX, secondY;
       for (int i = 0; i < NUM_TRIANGLES; i++) {
          firstX = centerX + (radius * cos(theta));
@@ -282,11 +282,11 @@ void Canvas::circle(int centerX, int centerY, int radius)
          theta += dTheta;
          secondX = centerX + (radius * cos(theta));
          secondY = centerY + (radius * sin(theta));
-         this->vertex(centerX, centerY);
-         this->vertex(firstX, firstY);
-         this->vertex(secondX, secondY);
+         vertex(centerX, centerY);
+         vertex(firstX, firstY);
+         vertex(secondX, secondY);
       }
-      this->end();
+      end();
       _circleOutline = false;
    }
 }
@@ -294,29 +294,29 @@ void Canvas::circle(int centerX, int centerY, int radius)
 void Canvas::star(int centerX, int centerY, int radius) 
 {
    cout << "Drawing star with center " << centerX << " " << centerY << " and radius " << radius << endl;
-   this->begin(TRIANGLES);
-   this->vertex(centerX - (radius / 2), centerY);
-   this->vertex(centerX + (radius / 2), centerY);
-   this->vertex(centerX, centerY + radius);
+   begin(TRIANGLES);
+   vertex(centerX - (radius / 2), centerY);
+   vertex(centerX + (radius / 2), centerY);
+   vertex(centerX, centerY + radius);
 
-   this->vertex(centerX, centerY - (radius / 2));
-   this->vertex(centerX, centerY + (radius / 2));
-   this->vertex(centerX + radius, centerY);
+   vertex(centerX, centerY - (radius / 2));
+   vertex(centerX, centerY + (radius / 2));
+   vertex(centerX + radius, centerY);
 
-   this->vertex(centerX - (radius / 2), centerY);
-   this->vertex(centerX + (radius / 2), centerY);
-   this->vertex(centerX, centerY - radius);
+   vertex(centerX - (radius / 2), centerY);
+   vertex(centerX + (radius / 2), centerY);
+   vertex(centerX, centerY - radius);
 
-   this->vertex(centerX, centerY - (radius / 2));
-   this->vertex(centerX, centerY + (radius / 2));
-   this->vertex(centerX - radius, centerY);
-   this->end();
+   vertex(centerX, centerY - (radius / 2));
+   vertex(centerX, centerY + (radius / 2));
+   vertex(centerX - radius, centerY);
+   end();
 }
 
 void Canvas::rose(int centerX, int centerY, int a, int n, int d) 
 {
    cout << "Drawing rose with center " << centerX << " " << centerY << ", a = " << a << ", k = " << n << " / " << d << endl;
-   this->begin(POINTS);
+   begin(POINTS);
    float r;
    float k = (float) n / d;
    int x, y;
@@ -324,15 +324,15 @@ void Canvas::rose(int centerX, int centerY, int a, int n, int d)
       r = a * cos(k * theta);
       x = r * cos(theta) + centerX;
       y = r * sin(theta) + centerY;
-      this->vertex(x, y);
+      vertex(x, y);
    }
-   this->end();
+   end();
 }
 
 void Canvas::maurerRose(int centerX, int centerY, int a, int n, int d) 
 {
    cout << "Drawing maurer rose with center " << centerX << " " << centerY << ", a = " << a << " n = " << n << ", d = " << d << endl;
-   this->begin(LINES);
+   begin(LINES);
    float r;
    int x, y;
    // draw rose outline
@@ -340,36 +340,36 @@ void Canvas::maurerRose(int centerX, int centerY, int a, int n, int d)
       r = a * cos(n * theta);
       x = r * cos(theta) + centerX;
       y = r * sin(theta) + centerY;
-      this->vertex(x, y);
+      vertex(x, y);
    }
    // draw lines connecting vertex pairs
    for (float theta = 0; theta < 2 * M_PI; theta += 0.017) {
       r = a * cos(n * theta * d);
       x = r * cos(theta * d) + centerX;
       y = r * sin(theta * d) + centerY;
-      this->vertex(x, y);
+      vertex(x, y);
    }
-   this->end();
+   end();
 }
 
 void Canvas::snowflake(int xStart, int yStart, int width, int recursionDepth) 
 {
    cout << "Drawing snowflake starting from " << xStart << " " << yStart << " with width " << width << endl;
    _snowflakeOutline = !_fillShapes;
-   _snowflakeOutline? this->begin(POINTS) : this->begin(TRIANGLES);
+   _snowflakeOutline? begin(POINTS) : begin(TRIANGLES);
    snowflakeHelper(xStart, yStart, xStart + width, yStart, recursionDepth - 1, 60);
    snowflakeHelper(xStart, yStart + 0.577 * width, xStart + width, yStart + 0.577 * width, recursionDepth - 1, 300);
-   this->end();
+   end();
    _snowflakeOutline = false;
 }
 
 void Canvas::snowflakeHelper(int nextV1X, int nextV1Y, int nextV2X, int nextV2Y, int recursionDepth, int vertex3Degrees) 
 {
-   Vertex v1 = this->vertex(nextV1X, nextV1Y);
-   Vertex v2 = this->vertex(nextV2X, nextV2Y);
+   Vertex v1 = vertex(nextV1X, nextV1Y);
+   Vertex v2 = vertex(nextV2X, nextV2Y);
    int r = sqrt(pow(v2.x - v1.x, 2) + pow(abs(v2.y - v1.y), 2));
    float theta = vertex3Degrees * (M_PI / 180) + atan2(v2.y - v1.y, v2.x - v1.x);
-   Vertex v3 = this->vertex(v1.x + (r * cos(theta)), v1.y + (r * sin(theta)));
+   Vertex v3 = vertex(v1.x + (r * cos(theta)), v1.y + (r * sin(theta)));
 
    if (recursionDepth >= 0) {
       int X[3] = { v1.x, v2.x, v3.x };

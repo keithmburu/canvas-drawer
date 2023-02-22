@@ -8,28 +8,30 @@ using namespace agl;
 
 int main(int argc, char** argv)
 {
-   int WIDTH = 640;
-   int HEIGHT = 380;
+   srand(time(nullptr));
+
+   int WIDTH = 1280;
+   int HEIGHT = 720;
    Canvas drawer(WIDTH, HEIGHT);
    
    // //--------------------------- ART 1 ---------------------------
    // drawer.background(0, 0, 0);
    // drawer.color(245, 245, 220);
-   // drawer.rectangle(0.1 * WIDTH, 0.3 * HEIGHT, 0.9 * WIDTH, 0.7 * HEIGHT);
+   // drawer.rectangle(0.1 * WIDTH, 0.35 * HEIGHT, 0.9 * WIDTH, 0.65 * HEIGHT);
    // drawer.color(245, 245, 220);
-   // drawer.circle(WIDTH / 2, HEIGHT / 2, HEIGHT / 3);
+   // drawer.circle(WIDTH / 2, HEIGHT / 2, HEIGHT / 3.5);
    // drawer.color(255, 255, 255);
    // for (int i = 1; i < 10; i++) {
    //    drawer.star(0.1 * i * WIDTH, 0.1 * HEIGHT, 0.05 * HEIGHT);
    //    drawer.star(0.1 * i * WIDTH, 0.9 * HEIGHT, 0.05 * HEIGHT);
    // }
    // drawer.color(255, 0, 255);
-   // drawer.setLineWidth(2);
-   // drawer.rose(WIDTH / 2, HEIGHT / 2, HEIGHT / 4, 7, 4);
+   // drawer.setLineWidth(3);
+   // drawer.rose(WIDTH / 2, HEIGHT / 2, HEIGHT / 5, 7, 4);
+   // drawer.setLineWidth(1);
    // drawer.glow();
    // drawer.gradient({0, 0, 255}, {0, 255, 255}, "horizontal", 0.1);
    // drawer.save("../images/art/art-1.png");
-   // drawer.setLineWidth(1);
 
 
    // //--------------------------- ART 2 ---------------------------
@@ -43,12 +45,12 @@ int main(int argc, char** argv)
    // drawer.circle(WIDTH / 4, HEIGHT / 2, HEIGHT / 12);
    // drawer.circle(WIDTH / 2, HEIGHT / 2, HEIGHT / 12);
    // drawer.circle(3 * WIDTH / 4, HEIGHT / 2, HEIGHT / 12);
-   // drawer.color(255, 100, 255);
+   // drawer.color(255, 150, 255);
    // int y = 0.5 * HEIGHT;
    // for (int n = 1; n <= 7; n++) {
    //    int d = n + 1;
-   //    int x = ((float) n / 8) * WIDTH;
-   //    drawer.rose(x, y, 20, n, d);
+   //    int x = (n / 8.0f) * WIDTH;
+   //    drawer.rose(x, y, WIDTH / 32, n, d);
    // }
    // drawer.glow();
    // drawer.save("../images/art/art-2.png");
@@ -61,7 +63,7 @@ int main(int argc, char** argv)
    //    drawer.color(rand() % 256, rand() % 256, rand() % 256);
    //    int centerX = rand() % WIDTH;
    //    int centerY = rand() % HEIGHT;
-   //    int a = rand() % min(WIDTH / 2, HEIGHT / 2);
+   //    int a = rand() % min({WIDTH / 2, HEIGHT / 2});
    //    int n = rand() % 8;
    //    int d = rand() % 100;
    //    drawer.maurerRose(centerX, centerY, a, n, d);
@@ -142,9 +144,9 @@ int main(int argc, char** argv)
 
 
    // //--------------------------- ART 7 ---------------------------
-   // WIDTH = 4 * WIDTH;
-   // HEIGHT = 4 * HEIGHT;
-   // Canvas drawer1(WIDTH, HEIGHT);
+   // int NEW_WIDTH = 2 * WIDTH;
+   // int NEW_HEIGHT = 2 * HEIGHT;
+   // Canvas drawer1(NEW_WIDTH, NEW_HEIGHT);
    // drawer1.color(255, 255, 255);
    // drawer1.background(50, 120, 180);
    // drawer1.setBlendMode("average");
@@ -152,14 +154,14 @@ int main(int argc, char** argv)
    // for (int i = 1; i <= 500; i++) {
    //    if (i % 5 <= 3) {
    //       drawer1.begin(POINTS);
-   //       int x = rand() % WIDTH;
-   //       int y = rand() % HEIGHT;
+   //       int x = rand() % NEW_WIDTH;
+   //       int y = rand() % NEW_HEIGHT;
    //       drawer1.vertex(x, y);
    //       drawer1.end();
    //    } else {
-   //       int xStart = rand() % WIDTH;
-   //       int yStart = max(20, rand() % HEIGHT);
-   //       int width = rand() % max(1, WIDTH / 20);
+   //       int xStart = rand() % NEW_WIDTH;
+   //       int yStart = max(20, rand() % NEW_HEIGHT);
+   //       int width = rand() % max(1, NEW_WIDTH / 20);
    //       drawer1.snowflake(xStart, yStart, width, 4);
    //    }
    // }

@@ -17,7 +17,6 @@ canvas-drawer/build $ cmake -G "Visual Studio 16 2019" ..
 canvas-drawer/build $ start Draw-2D.sln
 ```
 
-Your solution file should contain two projects: `pixmap_art` and `pixmap_test`.
 To run from the git bash command shell, 
 
 ```

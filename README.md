@@ -45,25 +45,25 @@ canvas-drawer/build $ ../bin/draw_art
 
 ## Supported primitives
 
-1. Point\
+1. Point
 <img src="images/test/point.png" width="100">
-2. Line\
+2. Line
 <img src="images/test/line-color-interpolation.png" width="100">
-3. Triangle\
+3. Triangle
 <img src="images/test/triangle.png" width="100">
 
 ## Composite shapes
 
-1. Circle\
+1. Circle
 <img src="images/test/circle.png" width="100">
-2. Rectangle\
+2. Rectangle
 <img src="images/test/rectangle.png" width="100">
-3. Star\
+3. Star
 <img src="images/test/star.png" width="100">
-4. Snowflake\
-<img src="images/test/snowflake-5.png" width="100">
-5. Rose\
+4. Rose
 <img src="images/test/rose.png" width="100">
+5. Snowflake
+<img src="images/test/snowflake-5.png" width="100">
 
 ## Results
 

@@ -2,7 +2,7 @@
 
 Implements a simple drawing api
 
-TODO: Add a representative image for your project here
+![](images/art/art-3.png)\
 
 ## How to build
 
@@ -45,8 +45,32 @@ canvas-drawer/build $ ../bin/draw_art
 
 ## Supported primitives
 
-TODO: Document the custom primitives supported by your canvas class
+1. Point\
+![](images/test/point.png)\
+2. Line\
+![](images/test/line-color-interpolation.png)\
+3. Triangle\
+![](images/test/triangle.png)\
+
+## Composite shapes
+
+1. Circle\
+![](images/test/circle.png)\
+2. Rectangle\
+![](images/test/rectangle.png)\
+3. Star\
+![](images/test/star.png)\
+4. Snowflake\
+![](images/test/snowflake-4.png)\
+5. Rose\
+![](images/test/rose.png)\
 
 ## Results
 
-TODO: Show artworks using your class
+![](images/art/art-1.png)\
+![](images/art/art-2.png)\
+![](images/art/art-4.png)\
+![](images/art/art-5.png)\
+![](images/art/art-6.png)\
+![](images/art/art-7.png)\
+

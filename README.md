@@ -64,6 +64,19 @@ canvas-drawer/build $ ../bin/draw_art
 5. Snowflake
 <img src="images/test/snowflake-5.png" width="100">
 
+## Features
+
+1. Outlined shapes
+<img src="images/test/outlined-triangle.png" width="100">
+<img src="images/test/outlined-circle.png" width="100">
+<img src="images/test/outlined-rectangle.png" width="100">
+<img src="images/test/outlined-star.png" width="100">
+<img src="images/test/outlined-snowflake.png" width="100">
+2. Blend modes - Replace, add, difference, or average
+<img src="images/test/blend-modes.png" width="100">
+3. Variable line width
+<img src="images/test/line-width.png" width="100">
+
 ## Results
 
 <img src="images/art/art-1.png" width="640">

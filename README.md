@@ -2,7 +2,7 @@
 
 Implements a simple drawing api
 
-TODO: Add a representative image for your project here
+<img src="images/art/art-3.png" width="640">
 
 ## How to build
 
@@ -17,7 +17,6 @@ canvas-drawer/build $ cmake -G "Visual Studio 16 2019" ..
 canvas-drawer/build $ start Draw-2D.sln
 ```
 
-Your solution file should contain two projects: `pixmap_art` and `pixmap_test`.
 To run from the git bash command shell, 
 
 ```
@@ -45,8 +44,32 @@ canvas-drawer/build $ ../bin/draw_art
 
 ## Supported primitives
 
-TODO: Document the custom primitives supported by your canvas class
+1. Point
+<img src="images/test/point.png" width="100">
+2. Line
+<img src="images/test/line-color-interpolation.png" width="100">
+3. Triangle
+<img src="images/test/triangle.png" width="100">
+
+## Composite shapes
+
+1. Circle
+<img src="images/test/circle.png" width="100">
+2. Rectangle
+<img src="images/test/rectangle.png" width="100">
+3. Star
+<img src="images/test/star.png" width="100">
+4. Rose
+<img src="images/test/rose.png" width="100">
+5. Snowflake
+<img src="images/test/snowflake-5.png" width="100">
 
 ## Results
 
-TODO: Show artworks using your class
+<img src="images/art/art-1.png" width="640">
+<img src="images/art/art-2.png" width="640">
+<img src="images/art/art-4.png" width="640">
+<img src="images/art/art-5.png" width="640">
+<img src="images/art/art-6.png" width="640">
+<img src="images/art/art-7.png" width="640">
+

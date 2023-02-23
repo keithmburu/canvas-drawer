@@ -1,3 +1,11 @@
+/**
+ * Test suite for 2D drawing class
+ * 
+ * @file draw_test.cpp
+ * @author Keith Mburu
+ * @date 2023-02-23
+ */
+
 #include <iostream>
 #include "canvas.h"
 

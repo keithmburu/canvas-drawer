@@ -1,3 +1,11 @@
+/**
+ * Implementation of 2D drawing class features
+ * 
+ * @file canvas.cpp
+ * @author Keith Mburu
+ * @date 2023-02-23
+ */
+
 #include "canvas.h"
 #include <cassert>
 #include "image.h"
@@ -209,7 +217,7 @@ void Canvas::drawTriangles()
             bool colorCondition = (alpha >= 0 && beta >= 0 && gamma >= 0);
             if (!_fillShapes) {
                // pixel must be on an edge
-               float thresh = _lineWidth / 20.0f;
+               float thresh = _lineWidth / 20.0f; 
                if (_circleOutline) { // only draw triangle side opposite origin
                   colorCondition = ((0 <= alpha && alpha <= thresh && beta >= 0 && gamma >= 0));
                } else if (_rectangleOutline) { // don't draw triangle hypotenuse
@@ -240,6 +248,7 @@ void Canvas::sortCounterClockwise(const vector<Vertex>::iterator& it) {
    float centroidX = (vertexA.x + vertexB.x + vertexC.x) / 3.0f;
    float centroidY = (vertexA.y + vertexB.y + vertexC.y) / 3.0f;
    sort(it, it + 3, [centroidX, centroidY](const Vertex& v1, const Vertex& v2) {
+      // sort by angle w.r.t centroid 
       float v1Angle = atan2(v1.y - centroidY, v1.x - centroidX);
       float v2Angle = atan2(v2.y - centroidY, v2.x - centroidX);
       return v1Angle > v2Angle;
@@ -320,7 +329,8 @@ void Canvas::rose(int centerX, int centerY, int a, int n, int d)
    float r;
    float k = (float) n / d;
    int x, y;
-   for (float theta = 0; theta < 2 * M_PI * 10; theta += 0.017) {
+   float ONE_DEGREE = 0.017; // 1 degree ~= 0.017 radians
+   for (float theta = 0; theta < 2 * M_PI * 10; theta += ONE_DEGREE) {
       r = a * cos(k * theta);
       x = r * cos(theta) + centerX;
       y = r * sin(theta) + centerY;
@@ -335,15 +345,16 @@ void Canvas::maurerRose(int centerX, int centerY, int a, int n, int d)
    begin(LINES);
    float r;
    int x, y;
+   float ONE_DEGREE = 0.017; // 1 degree ~= 0.017 radians
    // draw rose outline
-   for (float theta = 0; theta < 2 * M_PI; theta += 0.017) {
+   for (float theta = 0; theta < 2 * M_PI; theta += ONE_DEGREE) {
       r = a * cos(n * theta);
       x = r * cos(theta) + centerX;
       y = r * sin(theta) + centerY;
       vertex(x, y);
    }
    // draw lines connecting vertex pairs
-   for (float theta = 0; theta < 2 * M_PI; theta += 0.017) {
+   for (float theta = 0; theta < 2 * M_PI; theta += ONE_DEGREE) {
       r = a * cos(n * theta * d);
       x = r * cos(theta * d) + centerX;
       y = r * sin(theta * d) + centerY;

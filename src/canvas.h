@@ -1,8 +1,9 @@
 /**
+ * Class for 2D drawing using points, lines, and triangles
+ * 
  * @file canvas.h
  * @author Keith Mburu
- * @date 2023-02-13
- * 
+ * @date 2023-02-23
  */
 
 #ifndef canvas_H_
@@ -98,7 +99,7 @@ namespace agl
       // vertex3Degrees determines the angle that vertex 1 makes with vertex 3
       void snowflakeHelper(int nextV1X, int nextV1Y, int nextV2X, int nextV2Y, int recursionDepth, int vertex3Degrees);
 
-      // Compute where a point is in relation to a line
+      // Find where a point is in relation to a line
       int implicitEqn(int x, int y, const Vertex& a, const Vertex& b);
 
       // Blend in new pixel value
@@ -107,7 +108,7 @@ namespace agl
       // Apply a vertical or horizontal gradient to the canvas with two colors
       void gradient(const Pixel& a, const Pixel& b, const std::string& orientation, float alpha);
 
-      // Apply glowing texture to image
+      // Apply glowing texture to canvas
       void glow();
 
    private:

@@ -1,3 +1,11 @@
+/**
+ * Procedurally drawn art using 2D drawing class
+ * 
+ * @file draw_art.cpp
+ * @author Keith Mburu
+ * @date 2023-02-23
+ */
+
 #include <iostream>
 #include "canvas.h"
 #include <cmath>
